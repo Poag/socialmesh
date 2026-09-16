@@ -236,10 +236,57 @@ Future<void> _pumpEventQueue({int times = 20}) async {
   }
 }
 
+/// Poll an event-loop-bound condition by yielding to pending futures.
+/// Returns once [predicate] holds or [timeout] elapses, leaving the
+/// caller's own expect to report the failure cleanly.
+///
+/// The bound is wall-clock and must stay generous: under a full-suite
+/// run the worker isolate's event loop can be starved for hundreds of
+/// milliseconds before the notifier's async storage init settles. On
+/// the happy path this returns in a step or two, so a generous bound
+/// costs nothing when the code is healthy.
+Future<void> _pumpUntil(
+  bool Function() predicate, {
+  Duration timeout = const Duration(seconds: 5),
+  Duration step = const Duration(milliseconds: 5),
+}) async {
+  final deadline = DateTime.now().add(timeout);
+  while (!predicate() && DateTime.now().isBefore(deadline)) {
+    await Future<void>.delayed(step);
+  }
+}
+
 /// Initialize the provider and wait for async init to complete.
-Future<void> _initProvider(ProviderContainer container) async {
+///
+/// A fixed pump count races the notifier's async storage init under
+/// load, so tests that assert on populated state pass [until] to wait
+/// for the entry they need rather than assuming a turn count covers it.
+Future<void> _initProvider(
+  ProviderContainer container, {
+  bool Function()? until,
+}) async {
   container.listen(nodeDexProvider, (_, _) {});
   await _pumpEventQueue();
+  if (until != null) {
+    await _pumpUntil(until);
+    return;
+  }
+  // No explicit condition given: wait for entry count to hold steady
+  // across consecutive polls. A seeded container settles once its
+  // entries land, an unseeded one is already steady at zero, and a
+  // starved isolate keeps polling instead of falling through early.
+  var previous = -1;
+  var steadyPolls = 0;
+  await _pumpUntil(() {
+    final size = container.read(nodeDexProvider).length;
+    if (size == previous) {
+      steadyPolls++;
+    } else {
+      steadyPolls = 0;
+      previous = size;
+    }
+    return steadyPolls >= 3;
+  });
 }
 
 /// Wait for the store's debounced save to complete.
@@ -790,7 +837,11 @@ void main() {
         );
         addTearDown(ctx.container.dispose);
 
-        await _initProvider(ctx.container);
+        await _initProvider(
+          ctx.container,
+          until: () =>
+              ctx.container.read(nodeDexProvider).containsKey(_myNodeNum),
+        );
 
         final state = ctx.container.read(nodeDexProvider);
         // Self entry got stamped.
