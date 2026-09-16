@@ -5819,6 +5819,10 @@ class MessagesNotifier extends Notifier<List<Message>> {
 
   Future<void> _persistHiddenTapback(Message message) async {
     await _storage?.saveMessage(message);
+    // The storage write is an async gap the notifier can be disposed across,
+    // and one caller fires this without awaiting it, so the callers' own
+    // mounted checks do not cover the far side of the write.
+    if (!ref.mounted) return;
     _recordMessageSignature(message);
     ref.read(messageTimelineEpochProvider.notifier).bump();
   }
