@@ -8,12 +8,7 @@ import 'package:flutter/cupertino.dart' show CupertinoSwitch;
 import 'package:flutter/material.dart';
 import 'package:socialmesh/core/theme.dart';
 
-/// Custom animation utilities that complement the `animations` package.
-///
-/// The `animations` package provides page transitions (OpenContainer, SharedAxis,
-/// FadeThrough) which we use in animated_list_item.dart.
-///
-/// This file provides micro-interactions and UI animations:
+/// Custom animation utilities for micro-interactions and UI animations:
 /// - [BouncyTap] - Tactile tap feedback
 /// - [PulseAnimation] - Attention-grabbing pulse
 /// - [SpinAnimation] - Loading spinner
