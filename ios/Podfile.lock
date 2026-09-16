@@ -1678,66 +1678,66 @@ PODS:
     - SQLCipher/common
   - sticker_view (0.0.1):
     - Flutter
-  - Stripe (25.17.0):
-    - StripeApplePay (= 25.17.0)
-    - StripeCore (= 25.17.0)
-    - StripeIssuing (= 25.17.0)
-    - StripePayments (= 25.17.0)
-    - StripePaymentsUI (= 25.17.0)
-    - StripeUICore (= 25.17.0)
+  - Stripe (26.3.0):
+    - StripeApplePay (= 26.3.0)
+    - StripeCore (= 26.3.0)
+    - StripeIssuing (= 26.3.0)
+    - StripePayments (= 26.3.0)
+    - StripePaymentsUI (= 26.3.0)
+    - StripeUICore (= 26.3.0)
   - stripe_ios (0.0.1):
     - Flutter
-    - Stripe (~> 25.17.0)
+    - Stripe (~> 26.3.0)
     - stripe_ios/stripe_ios (= 0.0.1)
     - stripe_ios/stripe_objc (= 0.0.1)
-    - StripeApplePay (~> 25.17.0)
-    - StripeFinancialConnections (~> 25.17.0)
-    - StripePayments (~> 25.17.0)
-    - StripePaymentSheet (~> 25.17.0)
-    - StripePaymentsUI (~> 25.17.0)
+    - StripeApplePay (~> 26.3.0)
+    - StripeFinancialConnections (~> 26.3.0)
+    - StripePayments (~> 26.3.0)
+    - StripePaymentSheet (~> 26.3.0)
+    - StripePaymentsUI (~> 26.3.0)
   - stripe_ios/stripe_ios (0.0.1):
     - Flutter
-    - Stripe (~> 25.17.0)
+    - Stripe (~> 26.3.0)
     - stripe_ios/stripe_objc
-    - StripeApplePay (~> 25.17.0)
-    - StripeFinancialConnections (~> 25.17.0)
-    - StripePayments (~> 25.17.0)
-    - StripePaymentSheet (~> 25.17.0)
-    - StripePaymentsUI (~> 25.17.0)
+    - StripeApplePay (~> 26.3.0)
+    - StripeFinancialConnections (~> 26.3.0)
+    - StripePayments (~> 26.3.0)
+    - StripePaymentSheet (~> 26.3.0)
+    - StripePaymentsUI (~> 26.3.0)
   - stripe_ios/stripe_objc (0.0.1):
     - Flutter
-    - Stripe (~> 25.17.0)
-    - StripeApplePay (~> 25.17.0)
-    - StripeFinancialConnections (~> 25.17.0)
-    - StripePayments (~> 25.17.0)
-    - StripePaymentSheet (~> 25.17.0)
-    - StripePaymentsUI (~> 25.17.0)
-  - StripeApplePay (25.17.0):
-    - StripeCore (= 25.17.0)
-  - StripeCore (25.17.0)
-  - StripeFinancialConnections (25.17.0):
-    - StripeCore (= 25.17.0)
-    - StripeUICore (= 25.17.0)
-  - StripeIssuing (25.17.0):
-    - StripeCore (= 25.17.0)
-    - StripePayments (= 25.17.0)
-    - StripePaymentsUI (= 25.17.0)
-  - StripePayments (25.17.0):
-    - StripeCore (= 25.17.0)
-    - StripePayments/Stripe3DS2 (= 25.17.0)
-  - StripePayments/Stripe3DS2 (25.17.0):
-    - StripeCore (= 25.17.0)
-  - StripePaymentSheet (25.17.0):
-    - StripeApplePay (= 25.17.0)
-    - StripeCore (= 25.17.0)
-    - StripePayments (= 25.17.0)
-    - StripePaymentsUI (= 25.17.0)
-  - StripePaymentsUI (25.17.0):
-    - StripeCore (= 25.17.0)
-    - StripePayments (= 25.17.0)
-    - StripeUICore (= 25.17.0)
-  - StripeUICore (25.17.0):
-    - StripeCore (= 25.17.0)
+    - Stripe (~> 26.3.0)
+    - StripeApplePay (~> 26.3.0)
+    - StripeFinancialConnections (~> 26.3.0)
+    - StripePayments (~> 26.3.0)
+    - StripePaymentSheet (~> 26.3.0)
+    - StripePaymentsUI (~> 26.3.0)
+  - StripeApplePay (26.3.0):
+    - StripeCore (= 26.3.0)
+  - StripeCore (26.3.0)
+  - StripeFinancialConnections (26.3.0):
+    - StripeCore (= 26.3.0)
+    - StripeUICore (= 26.3.0)
+  - StripeIssuing (26.3.0):
+    - StripeCore (= 26.3.0)
+    - StripePayments (= 26.3.0)
+    - StripePaymentsUI (= 26.3.0)
+  - StripePayments (26.3.0):
+    - StripeCore (= 26.3.0)
+    - StripePayments/Stripe3DS2 (= 26.3.0)
+  - StripePayments/Stripe3DS2 (26.3.0):
+    - StripeCore (= 26.3.0)
+  - StripePaymentSheet (26.3.0):
+    - StripeApplePay (= 26.3.0)
+    - StripeCore (= 26.3.0)
+    - StripePayments (= 26.3.0)
+    - StripePaymentsUI (= 26.3.0)
+  - StripePaymentsUI (26.3.0):
+    - StripeCore (= 26.3.0)
+    - StripePayments (= 26.3.0)
+    - StripeUICore (= 26.3.0)
+  - StripeUICore (26.3.0):
+    - StripeCore (= 26.3.0)
   - TSBackgroundFetch (4.1.1)
   - url_launcher_ios (0.0.1):
     - Flutter
@@ -2067,16 +2067,16 @@ SPEC CHECKSUMS:
   sqflite_sqlcipher: 8e5bdaae6b2c254f8a277a564f07bc4e2a8642a3
   SQLCipher: eb79c64049cb002b4e9fcb30edb7979bf4706dfc
   sticker_view: 70c8064192685c6f50213e1e9dc3d93728e91def
-  Stripe: da4f210385ff97d786968eb751d5c0d5c47ba539
-  stripe_ios: 4cc4ead50c59fe63e0ef7507c3a3bae056f88abb
-  StripeApplePay: 7b1b6e86eb75be5d4bcf109c34224adf38000fe2
-  StripeCore: 60849de0ae448eb9a7ed4ee8208acce78832b255
-  StripeFinancialConnections: 280e67822cea7a8f89fb4fa97e6e7fb7293cff27
-  StripeIssuing: 7ece6d6d59ddb8636de386257175e71ced6966ad
-  StripePayments: befce228ec3545503c6ac54603b7e5a7cdb01a06
-  StripePaymentSheet: 11fe4afb439379bf905a09d99d99b80a6fac5cf1
-  StripePaymentsUI: c0e4426ec5aeaaedf3e4f32d30b77c4ef6e3dafa
-  StripeUICore: 124b860ab571114c2dec947d7b66a11e0d3238b6
+  Stripe: f7091df3d8d2d3914155b46e0aa3bbb1ed1775e5
+  stripe_ios: d317b7cdd5c650cd96819ebc2787743c26258fc9
+  StripeApplePay: e6feafcfde92bede41fca36a3638910dc05c6d7d
+  StripeCore: 38ffa3e203ed1090f577cd068322c5d23261bec4
+  StripeFinancialConnections: adb8a411899b89c943cfc138566fc68305f863f3
+  StripeIssuing: 1d120024eafa3d4372766cc44db571597d6507af
+  StripePayments: dc15899a649453ab6d377e5fc9369799ba3d3606
+  StripePaymentSheet: 3a8dd413cef611d1e025c772a1dba6535a076d9c
+  StripePaymentsUI: 967de780d7683b51323934d3c1e3406cb65038f1
+  StripeUICore: ed84f5c88d867aaf6da98f49641a4da27dddaab8
   TSBackgroundFetch: 18918b6449a1e3f01eb0f5b44d6d79ce6160a5a5
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
   video_player_avfoundation: 3453f792138786248960ca029747fcd9f318ef52
