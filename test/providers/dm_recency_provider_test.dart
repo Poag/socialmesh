@@ -17,6 +17,7 @@ Message _dm({
   required int from,
   required int to,
   required DateTime timestamp,
+  bool sent = false,
   bool received = false,
   bool isEmoji = false,
   int? replyId,
@@ -26,6 +27,7 @@ Message _dm({
     to: to,
     text: 'msg',
     timestamp: timestamp,
+    sent: sent,
     received: received,
     isEmoji: isEmoji,
     replyId: replyId,
@@ -103,5 +105,21 @@ void main() {
     ], _me);
 
     expect(dir.containsKey(_peer), isFalse);
+  });
+
+  test('a message sent through another of my radios counts as iMessaged', () {
+    const otherRadio = 0x3000;
+    final dir = computeDmContactDirection([
+      _dm(
+        from: otherRadio,
+        to: _peer,
+        timestamp: DateTime(2026, 6, 1),
+        sent: true,
+      ),
+    ], _me);
+
+    expect(dir.containsKey(otherRadio), isFalse);
+    expect(dir[_peer]!.iMessaged, isTrue);
+    expect(dir[_peer]!.messagedMe, isFalse);
   });
 }

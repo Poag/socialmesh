@@ -286,7 +286,7 @@ class RadioScope {
     // sharing arrangement it is part of.
     final target = _resolveAlias(prefs, identity);
     if (target == _current) return false;
-    AppLogging.storage(
+    AppLogging.session(
       'RADIO SCOPE: device $deviceId -> scope $target (was $_current)',
     );
     await _applyScope(prefs, target);
@@ -347,7 +347,7 @@ class RadioScope {
       // shared scope, folding in only the provisional directory a fresh
       // connect may have opened in the meantime.
       if (target == _current) return false;
-      AppLogging.storage(
+      AppLogging.session(
         'RADIO SCOPE: $identity shares data with $target - switching',
       );
       await _closeOpenStores();
@@ -367,7 +367,7 @@ class RadioScope {
       // the key proves they are one radio.
       final donor = _renumberedDonor(prefs, target: target, key: publicKeyHex);
       if (donor == null) return false;
-      AppLogging.storage(
+      AppLogging.session(
         'RADIO SCOPE: $target carries the key recorded for $donor - '
         'renumbered radio, folding $donor into $target',
       );
@@ -378,7 +378,7 @@ class RadioScope {
     }
 
     if (isProvisionalRadioScopeKey(_current)) {
-      AppLogging.storage(
+      AppLogging.session(
         'RADIO SCOPE: promoting provisional scope $_current -> $target',
       );
       await _closeOpenStores();
@@ -404,7 +404,7 @@ class RadioScope {
       deviceId: deviceId,
       previousScopeForDevice: previousScopeForDevice,
     )) {
-      AppLogging.storage(
+      AppLogging.session(
         'RADIO SCOPE: radio renumbered $_current -> $target, moving its data',
       );
       await _closeOpenStores();
@@ -416,9 +416,9 @@ class RadioScope {
 
     // Follow the radio rather than keep writing its data into the previous
     // radio's scope.
-    AppLogging.storage(
+    AppLogging.session(
       'RADIO SCOPE: identity $target does not match active scope $_current '
-      '— switching without promotion',
+      '- switching without promotion',
     );
     await _applyScope(prefs, target);
     return true;
@@ -723,7 +723,7 @@ class RadioScope {
 
     if (!await target.exists()) {
       await source.rename(target.path);
-      AppLogging.storage('RADIO SCOPE: moved scope directory $from -> $to');
+      AppLogging.session('RADIO SCOPE: moved scope directory $from -> $to');
       return;
     }
 
@@ -733,14 +733,14 @@ class RadioScope {
     final size = await _directorySize(source);
     if (size <= _emptyDatabaseBytes) {
       await source.delete(recursive: true);
-      AppLogging.storage(
+      AppLogging.session(
         'RADIO SCOPE: discarded empty provisional directory $from '
         '(scope $to already exists)',
       );
       return;
     }
-    AppLogging.storage(
-      'RADIO SCOPE: kept provisional directory $from ($size bytes) — scope '
+    AppLogging.session(
+      'RADIO SCOPE: kept provisional directory $from ($size bytes) - scope '
       '$to already exists and its data takes precedence',
     );
   }

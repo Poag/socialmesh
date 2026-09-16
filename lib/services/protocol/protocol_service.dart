@@ -3688,8 +3688,10 @@ class ProtocolService {
   ///
   /// The text portion goes through the regular text-message path so it
   /// lands in the channel inbox, matching what the firmware does for its
-  /// on-device inbox. Offers (channel, region, preset) are cached for the
-  /// Mesh Beacon screen and are never applied automatically.
+  /// on-device inbox; it is tagged [MessageSource.meshBeacon] so the
+  /// notification toggle for beacons can tell it from a typed message.
+  /// Offers (channel, region, preset) are cached for the Mesh Beacon screen
+  /// and are never applied automatically.
   void _handleMeshBeaconMessage(pb.MeshPacket packet, pb.Data data) {
     try {
       final event = MeshBeaconEvent.fromPayload(packet.from, data.payload);
@@ -3702,7 +3704,7 @@ class ProtocolService {
         final textData = pb.Data()
           ..portnum = pn.PortNum.TEXT_MESSAGE_APP
           ..payload = utf8.encode(event.message);
-        _handleTextMessage(packet, textData);
+        _handleTextMessage(packet, textData, source: MessageSource.meshBeacon);
       }
       _recentMeshBeacons.insert(0, event);
       if (_recentMeshBeacons.length > _maxRecentMeshBeacons) {
@@ -4464,7 +4466,11 @@ class ProtocolService {
       : null;
 
   /// Handle text message
-  void _handleTextMessage(pb.MeshPacket packet, pb.Data data) {
+  void _handleTextMessage(
+    pb.MeshPacket packet,
+    pb.Data data, {
+    MessageSource? source,
+  }) {
     try {
       final sanitized = sanitizeExternalTextWithStats(
         utf8.decode(data.payload, allowMalformed: true),
@@ -4558,7 +4564,9 @@ class ProtocolService {
         senderAvatarColor: senderAvatarColor,
         replyId: data.replyId != 0 ? data.replyId : null,
         isEmoji: data.emoji != 0,
-        source: data.emoji != 0 ? MessageSource.tapback : MessageSource.unknown,
+        source:
+            source ??
+            (data.emoji != 0 ? MessageSource.tapback : MessageSource.unknown),
       );
 
       if (message.isEmoji) {

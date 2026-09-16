@@ -910,6 +910,26 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
           ),
         ),
         _SearchableSettingItem(
+          icon: Icons.campaign_outlined,
+          title: context.l10n.settingsSearchMeshBeaconNotificationsTitle,
+          subtitle: context.l10n.settingsSearchMeshBeaconNotificationsSubtitle,
+          keywords: ['notification', 'beacon', 'mesh beacon', 'announcement'],
+          section: context.l10n.settingsSectionNotifications,
+          switchBuilder: (context, ref, settingsService) => ThemedSwitch(
+            value: settingsService.meshBeaconNotificationsEnabled,
+            onChanged: (value) async {
+              HapticFeedback.selectionClick();
+              await settingsService.setMeshBeaconNotificationsEnabled(value);
+              ref
+                  .read(userProfileProvider.notifier)
+                  .updatePreferences(
+                    UserPreferences(meshBeaconNotificationsEnabled: value),
+                  );
+              safeSetState(() {});
+            },
+          ),
+        ),
+        _SearchableSettingItem(
           icon: Icons.pin_drop_outlined,
           title: context.l10n.settingsSearchWaypointNotificationsTitle,
           subtitle: context.l10n.settingsSearchWaypointNotificationsSubtitle,
@@ -2919,6 +2939,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                                         UserPreferences(
                                           channelMessageNotificationsEnabled:
                                               value,
+                                        ),
+                                      );
+                                  safeSetState(() {});
+                                },
+                              ),
+                            ),
+                            _SettingsTile(
+                              icon: Icons.campaign_outlined,
+                              title: context.l10n.settingsTileMeshBeaconTitle,
+                              subtitle:
+                                  context.l10n.settingsTileMeshBeaconSubtitle,
+                              trailing: ThemedSwitch(
+                                value: settingsService
+                                    .meshBeaconNotificationsEnabled,
+                                onChanged: (value) async {
+                                  HapticFeedback.selectionClick();
+                                  await settingsService
+                                      .setMeshBeaconNotificationsEnabled(value);
+                                  ref
+                                      .read(userProfileProvider.notifier)
+                                      .updatePreferences(
+                                        UserPreferences(
+                                          meshBeaconNotificationsEnabled: value,
                                         ),
                                       );
                                   safeSetState(() {});
@@ -5026,17 +5069,19 @@ class _OpenSourceLicensesScreen extends ConsumerWidget {
     );
 
     return Theme(
-      // Apply dark theme to the license page
+      // The framework licence pages take their colours from the enclosing
+      // theme, so the app bar and list text follow the active light or dark
+      // palette rather than a fixed foreground.
       data: Theme.of(context).copyWith(
         scaffoldBackgroundColor: context.background,
         appBarTheme: AppBarTheme(
           backgroundColor: context.background,
-          foregroundColor: Colors.white,
+          foregroundColor: context.textPrimary,
           elevation: 0,
         ),
         cardColor: context.card,
         listTileTheme: ListTileThemeData(
-          textColor: Colors.white,
+          textColor: context.textPrimary,
           iconColor: accentColor,
         ),
       ),

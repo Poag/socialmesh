@@ -273,18 +273,24 @@ class DeviceStatusButton extends ConsumerWidget {
         autoReconnectState == AutoReconnectState.scanning ||
         autoReconnectState == AutoReconnectState.connecting;
 
+    // A live link is not a usable session: while the Meshtastic handshake
+    // is still running, or a dropped session is being restored, the device
+    // sheet reads Configuring or Recovering in amber, and the icon that
+    // opens it must not read as fully connected in the meantime.
+    final bannerState = ref.watch(meshtasticBannerStateProvider);
+    final sessionSettling =
+        isConnected && bannerState != MeshtasticBannerState.passthrough;
+    final statusColor = isConnected && !sessionSettling
+        ? context.accentColor
+        : (isReconnecting || sessionSettling)
+        ? AppTheme.warningYellow
+        : context.textTertiary;
+
     return IconButton(
       icon: Stack(
         clipBehavior: Clip.none,
         children: [
-          Icon(
-            Icons.router,
-            color: isConnected
-                ? context.accentColor
-                : isReconnecting
-                ? AppTheme.warningYellow
-                : context.textTertiary,
-          ),
+          Icon(Icons.router, color: statusColor),
           Positioned(
             right: -2,
             top: -2,
@@ -292,9 +298,9 @@ class DeviceStatusButton extends ConsumerWidget {
               width: 10,
               height: 10,
               decoration: BoxDecoration(
-                color: isConnected
+                color: isConnected && !sessionSettling
                     ? context.accentColor
-                    : isReconnecting
+                    : (isReconnecting || sessionSettling)
                     ? AppTheme.warningYellow
                     : AppTheme.errorRed,
                 shape: BoxShape.circle,

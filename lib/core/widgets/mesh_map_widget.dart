@@ -16,6 +16,7 @@ import '../theme.dart';
 import '../../models/mesh_models.dart';
 import '../../models/presence_confidence.dart';
 import 'app_bottom_sheet.dart';
+import 'node_avatar.dart';
 
 /// A shared, configurable map widget for displaying mesh nodes.
 ///
@@ -501,22 +502,13 @@ class ClusterListSheet extends StatelessWidget {
               return ListTile(
                 contentPadding: EdgeInsets.zero,
                 dense: true,
-                leading: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: context.accentColor.withValues(alpha: 0.15),
+                leading: NodeAvatar(
+                  text: nodeMarkerLabel(node),
+                  color: resolveNodeColor(
+                    nodeNum: node.nodeNum,
+                    avatarColor: node.avatarColor,
                   ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    nodeMarkerLabel(node),
-                    style: TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: context.accentColor,
-                    ),
-                  ),
+                  size: NodeAvatar.scaledSize(context, 36),
                 ),
                 title: Text(
                   node.displayName,

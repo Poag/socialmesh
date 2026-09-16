@@ -101,6 +101,11 @@ enum MessageSource {
   /// Sent as a tapback/emoji reaction
   tapback,
 
+  /// The text portion of a Mesh Beacon announcement, delivered into the
+  /// channel inbox like the firmware does. Beacons repeat on a schedule, so
+  /// notifications for them have their own toggle.
+  meshBeacon,
+
   /// Unknown/legacy source
   unknown,
 }
@@ -335,6 +340,18 @@ class Message {
   bool get isBroadcast => to == 0xFFFFFFFF;
   bool get isDirect => !isBroadcast;
   bool get isCanonicalTapback => isEmoji && replyId != null;
+
+  /// Whether one of the user's own radios sent this message.
+  ///
+  /// A dataset can be shared between radios, so the sender is not always
+  /// the radio connected right now: a message the app sent through another
+  /// radio carries that radio's node number and [sent]. A message addressed
+  /// to the connected radio is never "from me", whichever radio sent it.
+  bool isFromOwnRadio(int? myNodeNum) =>
+      from == myNodeNum || (sent && to != myNodeNum);
+
+  /// The other party of a direct message, given the connected radio.
+  int dmPeerFor(int? myNodeNum) => isFromOwnRadio(myNodeNum) ? to : from;
   bool get isFailed => status == MessageStatus.failed;
   bool get isPending => status == MessageStatus.pending;
   bool get isUnconfirmed => status == MessageStatus.unconfirmed;

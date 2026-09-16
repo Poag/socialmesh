@@ -90,6 +90,8 @@ class DebugExportService {
         'notificationsEnabled': settings.notificationsEnabled,
         'channelMessageNotificationsEnabled':
             settings.channelMessageNotificationsEnabled,
+        'meshBeaconNotificationsEnabled':
+            settings.meshBeaconNotificationsEnabled,
         'directMessageNotificationsEnabled':
             settings.directMessageNotificationsEnabled,
         'newNodeNotificationsEnabled': settings.newNodeNotificationsEnabled,

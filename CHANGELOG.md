@@ -5,6 +5,40 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.66.0] - 2026-09-16
+
+### Added (Channels by typed name and key)
+
+- The Channels menu gains "Enter Name and Key", which adds a channel from a typed name and base64 key for meshes that publish their channel settings as text rather than a QR code. The channel wizard's Shared level now shows the key field as well, so a community channel that uses a one-byte key other than the default can be entered as published instead of being silently replaced by the default key. The QR scanner gains a Paste link button that imports a channel share link from the clipboard when there is no code to scan
+
+### Changed (Bluetooth handshake diagnostics)
+
+- Settings > Tools > App Log now carries one HANDSHAKE_STATS line per handshake phase with the number of reads, empty reads, bytes, notification versus polled reads and the read latency range, on every build (#298, thanks markusgritsch). A connection that spends 15 seconds in the config phase can now be attributed from an exported log to slow link round trips or to the app reading more often than it needs to, and each of those has a different fix
+
+### Fixed (Licences unreadable in the light theme)
+
+- The Open Source Licences screen no longer draws its title and the licence list in white on the light theme, which hid every entry and the title of any licence opened from it (#339, thanks markusgritsch). The screen forced a white foreground that only suited the dark theme; it now follows the active palette
+
+### Fixed (Cluster list short names wrapped at Large text)
+
+- Tapping a map cluster with the Large text size no longer wraps the short names inside the circles of the node list (#338, thanks markusgritsch). The circles now use the same avatar as the Nodes list, which sizes the name to the circle instead of to the text setting, and the circle itself grows with the text size
+
+### Changed (Radio icon during Configuring)
+
+- The radio icon in the top-right corner now turns amber while the radio sheet reads "Configuring..." or "Recovering connection...", and only turns to the accent colour once the radio will accept sends (#335, thanks markusgritsch). Before this it read as connected from the moment the Bluetooth link came up, ahead of the sheet it opens
+
+### Added (Mesh Beacon notification toggle)
+
+- Settings > Notifications gains a "Mesh Beacon announcements" toggle (#341, thanks Nullvoid3771). A beacon's text lands in the channel inbox the way the firmware files it, and because beacons repeat on a schedule, every repeat raised a message notification. With the toggle off the announcement still arrives in the channel and the Mesh Beacon offers still appear, but no notification is raised for it; the channel itself stays unmuted. The setting syncs with the other notification toggles for signed-in users
+
+### Fixed (Direct messages sent through another of your radios showed as incoming)
+
+- When one radio uses another radio's data, direct messages that were sent through the other radio now sit on the right of the thread as your own, and the sending radio no longer appears in the direct message list as if it were a contact (#337, thanks markusgritsch). The thread decided "from me" by comparing the sender with the connected radio only, so every message the rooftop radio had sent read as received once the handheld was connected, and the rooftop radio was listed as a peer whose thread mixed every conversation it had sent into. A message the app sent through any of your radios now counts as your own, unless it was addressed to the connected radio
+
+### Changed (Radio Data decisions in the App Log)
+
+- The lines that record which stored dataset a radio is bound to, when a provisional dataset is promoted, folded or kept, and when a radio is switched to another dataset now always reach Settings > Tools > App Log (#336, thanks markusgritsch). They were only written to the console behind a flag that store builds ship off, so a report of the wrong dataset being in use could not be traced from an exported log
+
 ## [1.65.0] - 2026-09-09
 
 ### Added (Packet authentication policy on firmware 2.8)

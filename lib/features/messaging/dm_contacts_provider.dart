@@ -45,7 +45,7 @@ Map<int, DmContactInfo> computeDmContactInfo(
   for (final message in messages) {
     if (message.isCanonicalTapback) continue;
     if (!message.isDirect) continue;
-    final otherNode = message.from == myNodeNum ? message.to : message.from;
+    final otherNode = message.dmPeerFor(myNodeNum);
     final existing = dmInfoByNode[otherNode];
     final isUnread =
         message.received && message.from == otherNode && !message.read;

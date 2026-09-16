@@ -2981,7 +2981,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                                   }
 
                                   final message = row.message!;
-                                  final isFromMe = message.from == myNodeNum;
+                                  final isFromMe = message.isFromOwnRadio(
+                                    myNodeNum,
+                                  );
 
                                   if (index == filteredRows.length - 1 &&
                                       AppLogging.messagesLoggingEnabled) {
@@ -3414,6 +3416,7 @@ class _MessageBubble extends ConsumerWidget {
       case MessageSource.tapback:
         return Icons.thumb_up_alt;
       case MessageSource.manual:
+      case MessageSource.meshBeacon:
       case MessageSource.unknown:
         return null;
     }
@@ -3431,6 +3434,7 @@ class _MessageBubble extends ConsumerWidget {
       case MessageSource.tapback:
         return context.l10n.messagingSourceTapback;
       case MessageSource.manual:
+      case MessageSource.meshBeacon:
       case MessageSource.unknown:
         return null;
     }
@@ -3448,6 +3452,7 @@ class _MessageBubble extends ConsumerWidget {
       case MessageSource.tapback:
         return const Color(0xFF30D158); // Green
       case MessageSource.manual:
+      case MessageSource.meshBeacon:
       case MessageSource.unknown:
         return Colors.transparent;
     }

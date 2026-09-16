@@ -5176,6 +5176,14 @@ class MessagesNotifier extends Notifier<List<Message>> {
       return;
     }
 
+    // Beacon announcements repeat on a schedule; the user can silence them
+    // without muting the channel they arrive on.
+    if (message.source == MessageSource.meshBeacon &&
+        !settings.meshBeaconNotificationsEnabled) {
+      AppLogging.app('Mesh Beacon notifications disabled');
+      return;
+    }
+
     // Suppress notification if the user has muted this channel. Read the
     // persisted mute set directly from settings.prefs (the same
     // SharedPreferences instance MutedChannelsNotifier writes to) rather than

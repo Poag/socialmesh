@@ -30,8 +30,17 @@ jobs:
 
       - name: Get latest Meshtastic protobuf version
         id: latest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          LATEST=$(curl -s https://api.github.com/repos/meshtastic/protobufs/releases/latest | jq -r .tag_name)
+          # An unauthenticated call can be rate limited or fail outright, in
+          # which case jq prints "null" and the run would file an issue for a
+          # version that does not exist. Fail the step instead.
+          LATEST=$(gh api repos/meshtastic/protobufs/releases/latest --jq .tag_name)
+          if [ -z "$LATEST" ] || [ "$LATEST" = "null" ]; then
+            echo "::error::Could not resolve the latest protobuf release tag"
+            exit 1
+          fi
           echo "version=$LATEST" >> $GITHUB_OUTPUT
           echo "Latest protobuf version: $LATEST"
 

@@ -571,6 +571,16 @@ class SettingsService {
   bool get channelMessageNotificationsEnabled =>
       _preferences.getBool('channel_notifications_enabled') ?? true;
 
+  // Notification: Mesh Beacon announcements. Beacons land in the channel
+  // inbox and repeat on a schedule, so they get a toggle of their own under
+  // the channel toggle.
+  Future<void> setMeshBeaconNotificationsEnabled(bool enabled) async {
+    await _preferences.setBool('mesh_beacon_notifications_enabled', enabled);
+  }
+
+  bool get meshBeaconNotificationsEnabled =>
+      _preferences.getBool('mesh_beacon_notifications_enabled') ?? true;
+
   /// Notification: SIP Play "your turn" pings.
   ///
   /// Field-test request — when an inbound SIP Play move from the

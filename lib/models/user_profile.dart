@@ -12,6 +12,7 @@ class UserPreferences {
   final bool? newNodeNotificationsEnabled;
   final bool? directMessageNotificationsEnabled;
   final bool? channelMessageNotificationsEnabled;
+  final bool? meshBeaconNotificationsEnabled;
   final bool? notificationSoundEnabled;
   final bool? notificationVibrationEnabled;
 
@@ -79,6 +80,7 @@ class UserPreferences {
     this.newNodeNotificationsEnabled,
     this.directMessageNotificationsEnabled,
     this.channelMessageNotificationsEnabled,
+    this.meshBeaconNotificationsEnabled,
     this.notificationSoundEnabled,
     this.notificationVibrationEnabled,
     this.sipPlayTurnNotificationsEnabled,
@@ -120,6 +122,8 @@ class UserPreferences {
           json['directMessageNotificationsEnabled'] as bool?,
       channelMessageNotificationsEnabled:
           json['channelMessageNotificationsEnabled'] as bool?,
+      meshBeaconNotificationsEnabled:
+          json['meshBeaconNotificationsEnabled'] as bool?,
       notificationSoundEnabled: json['notificationSoundEnabled'] as bool?,
       notificationVibrationEnabled:
           json['notificationVibrationEnabled'] as bool?,
@@ -177,6 +181,8 @@ class UserPreferences {
       if (channelMessageNotificationsEnabled != null)
         'channelMessageNotificationsEnabled':
             channelMessageNotificationsEnabled,
+      if (meshBeaconNotificationsEnabled != null)
+        'meshBeaconNotificationsEnabled': meshBeaconNotificationsEnabled,
       if (notificationSoundEnabled != null)
         'notificationSoundEnabled': notificationSoundEnabled,
       if (notificationVibrationEnabled != null)
@@ -238,6 +244,7 @@ class UserPreferences {
     bool? newNodeNotificationsEnabled,
     bool? directMessageNotificationsEnabled,
     bool? channelMessageNotificationsEnabled,
+    bool? meshBeaconNotificationsEnabled,
     bool? notificationSoundEnabled,
     bool? notificationVibrationEnabled,
     bool? sipPlayTurnNotificationsEnabled,
@@ -280,6 +287,8 @@ class UserPreferences {
       channelMessageNotificationsEnabled:
           channelMessageNotificationsEnabled ??
           this.channelMessageNotificationsEnabled,
+      meshBeaconNotificationsEnabled:
+          meshBeaconNotificationsEnabled ?? this.meshBeaconNotificationsEnabled,
       notificationSoundEnabled:
           notificationSoundEnabled ?? this.notificationSoundEnabled,
       notificationVibrationEnabled:

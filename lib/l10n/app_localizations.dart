@@ -31970,6 +31970,30 @@ abstract class AppLocalizations {
   /// **'Channel messages'**
   String get settingsTileChannelMessagesTitle;
 
+  /// Title of the Mesh Beacon module settings tile (firmware 2.8+).
+  ///
+  /// In en, this message translates to:
+  /// **'Mesh Beacon'**
+  String get settingsTileMeshBeaconTitle;
+
+  /// Subtitle of the Mesh Beacon module settings tile.
+  ///
+  /// In en, this message translates to:
+  /// **'Announce your mesh and listen for beacons'**
+  String get settingsTileMeshBeaconSubtitle;
+
+  /// Title for the Mesh Beacon notifications search item.
+  ///
+  /// In en, this message translates to:
+  /// **'Mesh Beacon notifications'**
+  String get settingsSearchMeshBeaconNotificationsTitle;
+
+  /// Subtitle for the Mesh Beacon notifications search item.
+  ///
+  /// In en, this message translates to:
+  /// **'Notify for Mesh Beacon announcements, which repeat on a schedule'**
+  String get settingsSearchMeshBeaconNotificationsSubtitle;
+
   /// Subtitle of the clear all data settings tile.
   ///
   /// In en, this message translates to:
@@ -32647,18 +32671,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Traffic Management'**
   String get settingsTileTrafficManagementTitle;
-
-  /// Title of the Mesh Beacon module settings tile (firmware 2.8+).
-  ///
-  /// In en, this message translates to:
-  /// **'Mesh Beacon'**
-  String get settingsTileMeshBeaconTitle;
-
-  /// Subtitle of the Mesh Beacon module settings tile.
-  ///
-  /// In en, this message translates to:
-  /// **'Announce your mesh and listen for beacons'**
-  String get settingsTileMeshBeaconSubtitle;
 
   /// Subtitle of the notification vibration toggle tile.
   ///

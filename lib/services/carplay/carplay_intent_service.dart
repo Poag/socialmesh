@@ -119,11 +119,15 @@ class CarPlayIntentService {
 
   /// Whether an incoming message should surface a communication notification.
   /// Mirrors the gating in `MessagesNotifier._notifyNewMessage`: master
-  /// toggle, per-category toggle, and per-channel mute.
+  /// toggle, Mesh Beacon toggle, per-category toggle, and per-channel mute.
   bool _shouldPostIncomingNotification(Message m, bool isChannel) {
     final settings = _ref.read(settingsServiceProvider).value;
     if (settings == null) return false;
     if (!settings.notificationsEnabled) return false;
+    if (m.source == MessageSource.meshBeacon &&
+        !settings.meshBeaconNotificationsEnabled) {
+      return false;
+    }
     if (isChannel) {
       if (!settings.channelMessageNotificationsEnabled) return false;
       final channel = m.channel;

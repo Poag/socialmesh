@@ -25162,6 +25162,22 @@
   "@settingsTileChannelMessagesTitle": {
     "description": "Title of the channel messages notification toggle tile."
   },
+  "settingsTileMeshBeaconTitle": "Mesh Beacon announcements",
+  "@settingsTileMeshBeaconTitle": {
+    "description": "Title of the Mesh Beacon announcement notification toggle tile."
+  },
+  "settingsTileMeshBeaconSubtitle": "Notify for Mesh Beacon announcements, which repeat on a schedule",
+  "@settingsTileMeshBeaconSubtitle": {
+    "description": "Subtitle of the Mesh Beacon announcement notification toggle tile."
+  },
+  "settingsSearchMeshBeaconNotificationsTitle": "Mesh Beacon notifications",
+  "@settingsSearchMeshBeaconNotificationsTitle": {
+    "description": "Title for the Mesh Beacon notifications search item."
+  },
+  "settingsSearchMeshBeaconNotificationsSubtitle": "Notify for Mesh Beacon announcements, which repeat on a schedule",
+  "@settingsSearchMeshBeaconNotificationsSubtitle": {
+    "description": "Subtitle for the Mesh Beacon notifications search item."
+  },
   "settingsTileClearAllDataSubtitle": "Delete messages, settings, and keys",
   "@settingsTileClearAllDataSubtitle": {
     "description": "Subtitle of the clear all data settings tile."

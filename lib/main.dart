@@ -2252,6 +2252,11 @@ class _SocialMeshAppState extends ConsumerState<SocialMeshApp>
         prefs.channelMessageNotificationsEnabled!,
       );
     }
+    if (prefs.meshBeaconNotificationsEnabled != null) {
+      await settings.setMeshBeaconNotificationsEnabled(
+        prefs.meshBeaconNotificationsEnabled!,
+      );
+    }
     if (prefs.notificationSoundEnabled != null) {
       await settings.setNotificationSoundEnabled(
         prefs.notificationSoundEnabled!,

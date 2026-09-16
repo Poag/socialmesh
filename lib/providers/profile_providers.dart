@@ -416,6 +416,9 @@ class UserProfileNotifier extends AsyncNotifier<UserProfile?> {
         channelMessageNotificationsEnabled:
             newPreferences.channelMessageNotificationsEnabled ??
             existingPrefs.channelMessageNotificationsEnabled,
+        meshBeaconNotificationsEnabled:
+            newPreferences.meshBeaconNotificationsEnabled ??
+            existingPrefs.meshBeaconNotificationsEnabled,
         notificationSoundEnabled:
             newPreferences.notificationSoundEnabled ??
             existingPrefs.notificationSoundEnabled,

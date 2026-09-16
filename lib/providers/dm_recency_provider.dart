@@ -36,7 +36,7 @@ Map<int, DmContactDirection> computeDmContactDirection(
   for (final message in messages) {
     if (message.isCanonicalTapback) continue;
     if (!message.isDirect) continue;
-    final otherNode = message.from == myNodeNum ? message.to : message.from;
+    final otherNode = message.dmPeerFor(myNodeNum);
     final inbound = message.from == otherNode;
     final existing = result[otherNode];
     result[otherNode] = DmContactDirection(

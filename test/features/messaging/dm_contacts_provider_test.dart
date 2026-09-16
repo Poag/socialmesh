@@ -19,6 +19,7 @@ Message _dm({
   required int to,
   required String text,
   required DateTime timestamp,
+  bool sent = false,
   bool received = false,
   bool read = false,
   bool isEmoji = false,
@@ -30,6 +31,7 @@ Message _dm({
     to: to,
     text: text,
     timestamp: timestamp,
+    sent: sent,
     received: received,
     read: read,
     isEmoji: isEmoji,
@@ -152,5 +154,32 @@ void main() {
     ], _me);
 
     expect(info[_peer]!.senderDisplayName, 'Departed Node');
+  });
+
+  test('messages sent through another of my radios list the peer, not '
+      'the radio', () {
+    // The dataset is shared with a second radio. Its outgoing messages
+    // carry that radio's node number, and must not turn it into a contact.
+    const otherRadio = 0x3000;
+    final info = computeDmContactInfo([
+      _dm(
+        from: otherRadio,
+        to: _peer,
+        text: 'sent from the rooftop radio',
+        timestamp: DateTime(2026, 6, 1, 10),
+        sent: true,
+      ),
+      _dm(
+        from: _peer,
+        to: otherRadio,
+        text: 'reply to the rooftop radio',
+        timestamp: DateTime(2026, 6, 1, 11),
+        received: true,
+      ),
+    ], _me);
+
+    expect(info.containsKey(otherRadio), isFalse);
+    expect(info[_peer]!.lastMessage, 'reply to the rooftop radio');
+    expect(info[_peer]!.unreadCount, 1);
   });
 }
