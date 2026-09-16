@@ -18721,11 +18721,12 @@ class AppLocalizationsUk extends AppLocalizations {
   String get settingsTileChannelMessagesTitle => 'Повідомлення каналу';
 
   @override
-  String get settingsTileMeshBeaconTitle => 'Mesh Beacon';
+  String get settingsTileMeshBeaconNotificationsTitle =>
+      'Оголошення Mesh Beacon';
 
   @override
-  String get settingsTileMeshBeaconSubtitle =>
-      'Оголошуйте свою мережу та слухайте маяки';
+  String get settingsTileMeshBeaconNotificationsSubtitle =>
+      'Сповіщати про оголошення Mesh Beacon, які повторюються за розкладом';
 
   @override
   String get settingsSearchMeshBeaconNotificationsTitle =>
@@ -19129,6 +19130,13 @@ class AppLocalizationsUk extends AppLocalizations {
 
   @override
   String get settingsTileTrafficManagementTitle => 'Керування трафіком';
+
+  @override
+  String get settingsTileMeshBeaconTitle => 'Mesh Beacon';
+
+  @override
+  String get settingsTileMeshBeaconSubtitle =>
+      'Оголошуйте свою мережу та слухайте маяки';
 
   @override
   String get settingsTileVibrationSubtitle => 'Вібрувати при сповіщеннях';

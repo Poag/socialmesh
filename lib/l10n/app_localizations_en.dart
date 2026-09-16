@@ -18503,11 +18503,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsTileChannelMessagesTitle => 'Channel messages';
 
   @override
-  String get settingsTileMeshBeaconTitle => 'Mesh Beacon';
+  String get settingsTileMeshBeaconNotificationsTitle =>
+      'Mesh Beacon announcements';
 
   @override
-  String get settingsTileMeshBeaconSubtitle =>
-      'Announce your mesh and listen for beacons';
+  String get settingsTileMeshBeaconNotificationsSubtitle =>
+      'Notify for Mesh Beacon announcements, which repeat on a schedule';
 
   @override
   String get settingsSearchMeshBeaconNotificationsTitle =>
@@ -18899,6 +18900,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get settingsTileTrafficManagementTitle => 'Traffic Management';
+
+  @override
+  String get settingsTileMeshBeaconTitle => 'Mesh Beacon';
+
+  @override
+  String get settingsTileMeshBeaconSubtitle =>
+      'Announce your mesh and listen for beacons';
 
   @override
   String get settingsTileVibrationSubtitle => 'Vibrate with notifications';

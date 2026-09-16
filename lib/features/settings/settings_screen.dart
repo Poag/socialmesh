@@ -2947,9 +2947,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen>
                             ),
                             _SettingsTile(
                               icon: Icons.campaign_outlined,
-                              title: context.l10n.settingsTileMeshBeaconTitle,
-                              subtitle:
-                                  context.l10n.settingsTileMeshBeaconSubtitle,
+                              title: context
+                                  .l10n
+                                  .settingsTileMeshBeaconNotificationsTitle,
+                              subtitle: context
+                                  .l10n
+                                  .settingsTileMeshBeaconNotificationsSubtitle,
                               trailing: ThemedSwitch(
                                 value: settingsService
                                     .meshBeaconNotificationsEnabled,

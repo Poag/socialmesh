@@ -25162,12 +25162,12 @@
   "@settingsTileChannelMessagesTitle": {
     "description": "Title of the channel messages notification toggle tile."
   },
-  "settingsTileMeshBeaconTitle": "Mesh Beacon announcements",
-  "@settingsTileMeshBeaconTitle": {
+  "settingsTileMeshBeaconNotificationsTitle": "Mesh Beacon announcements",
+  "@settingsTileMeshBeaconNotificationsTitle": {
     "description": "Title of the Mesh Beacon announcement notification toggle tile."
   },
-  "settingsTileMeshBeaconSubtitle": "Notify for Mesh Beacon announcements, which repeat on a schedule",
-  "@settingsTileMeshBeaconSubtitle": {
+  "settingsTileMeshBeaconNotificationsSubtitle": "Notify for Mesh Beacon announcements, which repeat on a schedule",
+  "@settingsTileMeshBeaconNotificationsSubtitle": {
     "description": "Subtitle of the Mesh Beacon announcement notification toggle tile."
   },
   "settingsSearchMeshBeaconNotificationsTitle": "Mesh Beacon notifications",
