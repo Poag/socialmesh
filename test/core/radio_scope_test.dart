@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:socialmesh/core/logging.dart';
 import 'package:socialmesh/core/radio_scope.dart';
 
 void main() {
@@ -656,5 +657,111 @@ void main() {
 
       expect(RadioScope.instance.currentKey, radioScopeKeyForDeviceId('ble-a'));
     });
+  });
+
+  // Store builds ship every console flag off, so the only way a wrong
+  // binding can be read from an exported App Log is if the resolution is
+  // reported even when it changes nothing.
+  group('always-on log', () {
+    late List<String> sessionLines;
+
+    setUp(() {
+      AppLogging.reset();
+      sessionLines = [];
+      AppLogging.setAppLogSink((level, source, message) {
+        if (source == 'session') sessionLines.add(message);
+      });
+    });
+
+    tearDown(AppLogging.reset);
+
+    test('init reports the active scope', () async {
+      await RadioScope.instance.init();
+
+      expect(sessionLines, contains('RADIO SCOPE: active scope=legacy'));
+    });
+
+    test(
+      'a connect that changes nothing still reports how it resolved',
+      () async {
+        await RadioScope.instance.init();
+        await RadioScope.instance.useNodeNum(0xaaaa, deviceId: 'ble-a');
+        sessionLines.clear();
+
+        final changed = await RadioScope.instance.useDevice(deviceId: 'ble-a');
+
+        expect(changed, isFalse);
+        expect(sessionLines, [
+          'RADIO SCOPE: device ble-a resolves to node-0000aaaa via mapping '
+              '(active node-0000aaaa)',
+        ]);
+      },
+    );
+
+    test('a connect to another radio reports the scope it lands on', () async {
+      await RadioScope.instance.init();
+      await RadioScope.instance.useNodeNum(0xaaaa, deviceId: 'ble-a');
+      sessionLines.clear();
+
+      await RadioScope.instance.useDevice(deviceId: 'ble-b');
+
+      expect(sessionLines, [
+        'RADIO SCOPE: device ble-b resolves to '
+            '${radioScopeKeyForDeviceId('ble-b')} via provisional '
+            '(active node-0000aaaa)',
+      ]);
+    });
+
+    test(
+      'an identity report that changes nothing still reports itself',
+      () async {
+        await RadioScope.instance.init();
+        await RadioScope.instance.useNodeNum(0xaaaa, deviceId: 'ble-a');
+        sessionLines.clear();
+
+        final changed = await RadioScope.instance.useNodeNum(
+          0xaaaa,
+          deviceId: 'ble-a',
+        );
+
+        expect(changed, isFalse);
+        expect(sessionLines, [
+          'RADIO SCOPE: identity node-0000aaaa device=ble-a '
+              'previously=node-0000aaaa key=none resolves to node-0000aaaa '
+              '(active node-0000aaaa)',
+        ]);
+      },
+    );
+
+    test(
+      'an identity report names the scope the device was mapped to',
+      () async {
+        await RadioScope.instance.init();
+        await RadioScope.instance.useNodeNum(0xbbbb);
+        await writeScopedFile('messages.db', 'B');
+        await RadioScope.instance.useNodeNum(0xaaaa, deviceId: 'ble-a');
+        await writeScopedFile('messages.db', 'A');
+        // Radio B's identity recorded against radio A's device id: from
+        // here every connect to ble-a lands on B's scope with no change to
+        // report, so the identity line must show where the id was filed.
+        await RadioScope.instance.useNodeNum(0xbbbb, deviceId: 'ble-a');
+        await RadioScope.instance.useDevice(deviceId: 'ble-a');
+        expect(RadioScope.instance.currentKey, 'node-0000bbbb');
+        sessionLines.clear();
+
+        await RadioScope.instance.useNodeNum(
+          0xaaaa,
+          deviceId: 'ble-a',
+          ownPublicKey: const [1, 2, 3],
+        );
+
+        expect(
+          sessionLines.first,
+          'RADIO SCOPE: identity node-0000aaaa device=ble-a '
+          'previously=node-0000bbbb key=known resolves to node-0000aaaa '
+          '(active node-0000bbbb)',
+        );
+      },
+    );
   });
 }

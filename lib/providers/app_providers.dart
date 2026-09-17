@@ -7037,8 +7037,9 @@ class MyNodeNumNotifier extends Notifier<int?> {
     } catch (e) {
       // Scope binding is bookkeeping on top of an already-ready session;
       // a storage failure here must never surface as an unhandled error
-      // on the readiness path.
-      AppLogging.storage('RadioScope bind for $nodeNum failed: $e');
+      // on the readiness path. It does go to the always-on log: a bind
+      // that fails silently reads as a radio stuck on another's dataset.
+      AppLogging.session('RADIO SCOPE: bind for $nodeNum failed: $e');
     }
   }
 }

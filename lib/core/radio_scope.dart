@@ -208,7 +208,7 @@ class RadioScope {
     final prefs = await SharedPreferences.getInstance();
     _current = prefs.getString(_prefsCurrentKey) ?? kLegacyRadioScopeKey;
     await _migrateUnscopedData(prefs);
-    AppLogging.storage('RADIO SCOPE: active scope=$_current');
+    AppLogging.session('RADIO SCOPE: active scope=$_current');
   }
 
   /// Absolute path for [fileName] inside the current scope, creating the
@@ -285,10 +285,20 @@ class RadioScope {
     // Bookkeeping stays with the radio's own identity; storage follows any
     // sharing arrangement it is part of.
     final target = _resolveAlias(prefs, identity);
-    if (target == _current) return false;
+    // Logged on every connect, including when nothing changes: a wrong
+    // binding shows up as a connect that quietly resolves to another
+    // radio's scope, and that is only visible when the no-change case
+    // reports how it was resolved.
+    final source = known != null
+        ? 'mapping'
+        : knownNodeNum != null
+        ? 'hint'
+        : 'provisional';
     AppLogging.session(
-      'RADIO SCOPE: device $deviceId -> scope $target (was $_current)',
+      'RADIO SCOPE: device $deviceId resolves to $target via $source '
+      '(active $_current)',
     );
+    if (target == _current) return false;
     await _applyScope(prefs, target);
     return true;
   }
@@ -341,6 +351,14 @@ class RadioScope {
     _lastIdentity = identity;
 
     final target = _resolveAlias(prefs, identity);
+    // Logged on every identity report for the same reason as the connect
+    // line above; the branch lines below then say which rule applied.
+    AppLogging.session(
+      'RADIO SCOPE: identity $identity device=${deviceId ?? '-'} '
+      'previously=${previousScopeForDevice ?? '-'} '
+      'key=${publicKeyHex == null ? 'none' : 'known'} '
+      'resolves to $target (active $_current)',
+    );
     if (target != identity) {
       // This radio shares another radio's data. The arrangement is explicit,
       // so none of the renumbering inference below applies: land on the

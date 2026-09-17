@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Connecting over Bluetooth no longer spends around 14 seconds in the "Configuring..." phase on a radio that answers in under 50 milliseconds per read (#298, thanks markusgritsch). The HANDSHAKE_STATS line added in 1.66.0 showed the config phase as 47 reads, each returning one frame and each taking about 47 milliseconds, with no empty reads and no notifications: the firmware hands config frames over one per read and does not notify for them, and the app read one frame, waited 250 milliseconds, then read the next, so the whole phase ran at the wait interval instead of the link speed. A poll now keeps reading until the radio reports nothing pending, and the wait is only paid between bursts, which on that log brings the config phase from about 14 seconds to about 2.5 seconds. The node list phase was already driven by notifications and is unchanged
 
+### Changed (Radio Data resolution in the App Log)
+
+- Settings > Tools > App Log now records how every connect and every identity report resolved to a stored dataset, including when nothing changed (#336, thanks markusgritsch). 1.66.0 only wrote a line when the dataset in use switched, so a radio whose Bluetooth identity was already filed under another radio's dataset connected without leaving a trace, and the exported log could not show it. Each connect now logs the device id, the dataset it resolved to and how (a remembered mapping, the last known node number, or a fresh provisional dataset); each identity report logs the reported node number, the dataset its device id was previously filed under, whether the radio's key was known, and the dataset it resolved to. The active dataset at launch and a failed binding are logged the same way
+
 ## [1.66.0] - 2026-09-16
 
 ### Added (Channels by typed name and key)
