@@ -153,7 +153,10 @@ abstract class DeviceTransport {
   /// Send data to the device
   Future<void> send(List<int> data);
 
-  /// Poll for data once (for transports that support active polling)
+  /// Read every frame the device has ready (for transports that support
+  /// active polling). One call drains until the device reports nothing
+  /// pending; the handshake poll loop relies on that so its wait between
+  /// polls is paid per burst, not per frame.
   Future<void> pollOnce();
 
   /// Enable notifications (BLE-specific, called after initial config download)

@@ -121,6 +121,44 @@ class BleTransport implements DeviceTransport, ReceiveDiagnosticsSupport {
     return data;
   }
 
+  /// Reads fromRadio through [read] until the radio returns an empty
+  /// payload, handing every non-empty frame to [onFrame] in order, and
+  /// returns the number of frames delivered.
+  ///
+  /// The firmware produces config and NodeDB frames one per read, on
+  /// demand, and does not raise a fromNum notification for them. A
+  /// caller that reads once and then waits therefore pays its whole wait
+  /// interval for every frame of the handshake. Every read path drains
+  /// through this loop so the wait is only ever paid between bursts.
+  /// A read failure propagates to the caller after the frames already
+  /// read have been delivered.
+  @visibleForTesting
+  static Future<int> drainUntilEmpty(
+    Future<List<int>> Function() read,
+    void Function(List<int> frame) onFrame,
+  ) async {
+    var frames = 0;
+    while (true) {
+      final data = await read();
+      if (data.isEmpty) return frames;
+      frames++;
+      onFrame(data);
+    }
+  }
+
+  // Shared drain for the notification, refresh and poll read paths. Counts
+  // and publishes each frame; the caller owns the failure counter and the
+  // authentication-error policy for its path.
+  Future<int> _drainFromRadio({required bool viaPoll}) {
+    return drainUntilEmpty(() => _readFromRadio(viaPoll: viaPoll), (data) {
+      _rxBytesReadCount++;
+      AppLogging.ble(
+        'BLE_RX_RAW len=${data.length} ts=${DateTime.now().toIso8601String()}',
+      );
+      _dataController.add(data);
+    });
+  }
+
   /// Concurrency guard for `refreshNotifications()`. Prevents two
   /// concurrent refresh attempts from racing into a double-`listen()`
   /// on the fromNum characteristic.
@@ -1182,17 +1220,7 @@ class BleTransport implements DeviceTransport, ReceiveDiagnosticsSupport {
             _fromNumNotificationCount++;
             AppLogging.ble('fromNum notified, reading fromRadio');
             try {
-              // Read from fromRadio until empty
-              while (true) {
-                final data = await _readFromRadio(viaPoll: false);
-                if (data.isEmpty) break;
-                _rxBytesReadCount++;
-                AppLogging.ble(
-                  'BLE_RX_RAW len=${data.length} ts=${DateTime.now().toIso8601String()}',
-                );
-                AppLogging.ble('Read ${data.length} bytes from fromRadio');
-                _dataController.add(data);
-              }
+              await _drainFromRadio(viaPoll: false);
             } catch (e) {
               _rxReadFailureCount++;
               AppLogging.ble('⚠️ Error reading fromRadio: $e');
@@ -1308,16 +1336,7 @@ class BleTransport implements DeviceTransport, ReceiveDiagnosticsSupport {
               _fromNumNotificationCount++;
               AppLogging.ble('fromNum notified, reading fromRadio');
               try {
-                while (true) {
-                  final data = await _readFromRadio(viaPoll: false);
-                  if (data.isEmpty) break;
-                  _rxBytesReadCount++;
-                  AppLogging.ble(
-                    'BLE_RX_RAW len=${data.length} ts=${DateTime.now().toIso8601String()}',
-                  );
-                  AppLogging.ble('Read ${data.length} bytes from fromRadio');
-                  _dataController.add(data);
-                }
+                await _drainFromRadio(viaPoll: false);
               } catch (e) {
                 _rxReadFailureCount++;
                 AppLogging.ble('⚠️ Error reading fromRadio: $e');
@@ -1361,13 +1380,8 @@ class BleTransport implements DeviceTransport, ReceiveDiagnosticsSupport {
       // accumulated while the subscription was dead.
       if (_rxCharacteristic != null) {
         try {
-          while (true) {
-            final data = await _readFromRadio(viaPoll: true);
-            if (data.isEmpty) break;
-            _lastNotificationAt = DateTime.now();
-            _rxBytesReadCount++;
-            _dataController.add(data);
-          }
+          final frames = await _drainFromRadio(viaPoll: true);
+          if (frames > 0) _lastNotificationAt = DateTime.now();
         } catch (e) {
           _rxReadFailureCount++;
           AppLogging.ble('⚠️ Error draining fromRadio after refresh: $e');
@@ -1464,12 +1478,8 @@ class BleTransport implements DeviceTransport, ReceiveDiagnosticsSupport {
     }
 
     try {
-      final value = await _readFromRadio(viaPoll: true);
+      await _drainFromRadio(viaPoll: true);
       _consecutiveAuthErrors = 0; // Reset on success
-      if (value.isNotEmpty) {
-        AppLogging.ble('Polled ${value.length} bytes');
-        _dataController.add(value);
-      }
     } catch (e) {
       AppLogging.ble('⚠️ Polling error: $e');
       if (_isAuthenticationError(e)) {

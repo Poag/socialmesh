@@ -2312,9 +2312,11 @@ class ProtocolService {
     }
     _pollingConfig = true;
     int pollCount = 0;
-    // 250 ms × 200 ≈ 50 s total poll budget — covers both handshake phases
-    // on busy meshes. The loop also exits early when the handshake reaches
-    // `complete` or the transport disconnects.
+    // 250 ms x 200 is about 50 s of poll budget, covering both handshake
+    // phases on busy meshes. The loop also exits early when the handshake
+    // reaches `complete` or the transport disconnects. Each poll drains
+    // fromRadio until the radio reports empty, so the delay below is paid
+    // once per burst of frames, never once per frame.
     const maxPolls = 200;
 
     Future.doWhile(() async {
