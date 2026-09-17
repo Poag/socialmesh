@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.67.0] - 2026-09-17
+
+### Fixed (Bluetooth connect paced by the poll delay)
+
+- Connecting over Bluetooth no longer spends around 14 seconds in the "Configuring..." phase on a radio that answers in under 50 milliseconds per read (#298, thanks markusgritsch). The HANDSHAKE_STATS line added in 1.66.0 showed the config phase as 47 reads, each returning one frame and each taking about 47 milliseconds, with no empty reads and no notifications: the firmware hands config frames over one per read and does not notify for them, and the app read one frame, waited 250 milliseconds, then read the next, so the whole phase ran at the wait interval instead of the link speed. A poll now keeps reading until the radio reports nothing pending, and the wait is only paid between bursts, which on that log brings the config phase from about 14 seconds to about 2.5 seconds. The node list phase was already driven by notifications and is unchanged
+
 ## [1.66.0] - 2026-09-16
 
 ### Added (Channels by typed name and key)
