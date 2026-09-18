@@ -142,6 +142,7 @@ app.*.map.json
 assets/widget_templates/*.json
 
 # Internal docs (keep public-facing docs for repo links)
+/FUNDING_DOSSIER.md
 /docs/
 !/docs/ARCHITECTURE.md
 !/docs/BACKEND.md
