@@ -7,6 +7,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/constants.dart';
 import '../../../core/l10n/l10n_extension.dart';
@@ -575,17 +576,15 @@ class _FileTransferContactsScreenState
 
     // Check microphone permission before showing the overlay. The overlay
     // starts in idle state — recording only begins when the user taps record.
-    final hasMic = await VoicePermissionService.requestMicrophonePermission();
-    if (!hasMic) {
+    final micStatus = await VoicePermissionService.requestMicrophoneStatus();
+    if (!micStatus.isGranted && !micStatus.isLimited) {
       AppLogging.voice('_sendVoiceToContact: microphone permission denied');
       autoStopNotifier.dispose();
       await voiceService.dispose();
       if (!mounted) return;
-      final showSettings =
-          Platform.isIOS ||
-          await VoicePermissionService.isMicrophonePermanentlyDenied();
-      if (!mounted) return;
-      _showVoicePermissionSnackBar(showSettings);
+      _showVoicePermissionSnackBar(
+        Platform.isIOS || micStatus.isPermanentlyDenied,
+      );
       return;
     }
 

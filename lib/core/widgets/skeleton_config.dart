@@ -32,7 +32,7 @@ class AppSkeletonConfig {
   /// Standard skeleton config
   static SkeletonizerConfigData config(BuildContext context) =>
       SkeletonizerConfigData(
-        effect: effect(context),
+        effectResolver: (_) => effect(context),
         justifyMultiLineText: true,
         textBorderRadius: TextBoneBorderRadius(
           BorderRadius.circular(AppTheme.radius4),

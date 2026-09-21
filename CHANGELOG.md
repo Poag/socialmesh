@@ -15,6 +15,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Tapping Cancel on the Devices screen while it reads "Auto-reconnecting..." now stops the reconnect it was waiting on and then scans, instead of leaving a screen with no Bluetooth list and nothing to tap (#352, thanks markusgritsch). The screen showed that overlay for the background reconnect already running when it opened, but Cancel only cleared the overlay: the background attempt kept scanning and retrying, held the Bluetooth adapter, and the manual scan that Cancel started was blocked behind it. Cancel now runs the same authoritative stop as the Cancel on the top banner, waits for it, and only then scans; a cancelled attempt of the screen's own can no longer start a second scan of its own
 
+### Fixed (Android microphone denial never offered Settings)
+
+- On Android, denying the microphone permanently now shows the Open Settings action on the voice message snackbar again. permission_handler 13.0.2 stopped reporting a permanent denial from a status read on Android, since the OS cannot distinguish it from a never-asked or "Ask every time" permission; only the result of a request carries it. The voice permission check now branches on the request result instead of reading the status afterwards
+
+### Changed (Dependencies)
+
+- Bumped nordic_dfu 7.1.3 to 8.1.0 (NordicDFU 4.17.0), permission_handler 12.0.3 to 13.0.2 (compiles against Android SDK 37), skeletonizer 2.1.3 to 3.0.0, flutter_foreground_task 9.2.2 to 11.0.3, purchases_flutter 10.7.0 to 10.13.1 (RevenueCat 5.90.1), camera 0.12.0+1 to 0.12.1, flutter_local_notifications 22.3.0 to 22.3.1, emoji_picker_flutter 4.5.3 to 4.5.4, sqflite_common_ffi 2.4.2 to 2.4.3 and clock 1.1.2 to 1.1.3
+
 ## [1.67.0] - 2026-09-17
 
 ### Fixed (Bluetooth connect paced by the poll delay)

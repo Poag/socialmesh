@@ -1620,18 +1620,18 @@ PODS:
     - nanopb/encode (= 3.30910.0)
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
-  - nordic_dfu (7.1.1):
+  - nordic_dfu (8.1.0):
     - Flutter
     - FlutterMacOS
-    - NordicDFU (~> 4.16.0)
-  - NordicDFU (4.16.0):
-    - ZIPFoundation (= 0.9.19)
+    - NordicDFU (~> 4.17.0)
+  - NordicDFU (4.17.0):
+    - ZIPFoundation (= 0.9.20)
   - open_mail_launcher (0.3.1):
     - Flutter
   - OrderedSet (6.0.3)
   - package_info_plus (0.4.5):
     - Flutter
-  - permission_handler_apple (9.3.0):
+  - permission_handler_apple (9.4.8):
     - Flutter
   - photo_manager (3.12.0):
     - Flutter
@@ -1639,15 +1639,15 @@ PODS:
   - PromisesObjC (2.4.1)
   - PromisesSwift (2.4.1):
     - PromisesObjC (= 2.4.1)
-  - purchases_flutter (10.7.0):
+  - purchases_flutter (10.13.1):
     - Flutter
-    - PurchasesHybridCommon (= 18.28.0)
-  - PurchasesHybridCommon (18.28.0):
-    - RevenueCat (= 5.83.0)
+    - PurchasesHybridCommon (= 19.2.0)
+  - PurchasesHybridCommon (19.2.0):
+    - RevenueCat (= 5.90.1)
   - RecaptchaInterop (101.0.0)
   - record_ios (2.0.0):
     - Flutter
-  - RevenueCat (5.83.0)
+  - RevenueCat (5.90.1)
   - SDWebImage (5.21.7):
     - SDWebImage/Core (= 5.21.7)
   - SDWebImage/Core (5.21.7)
@@ -1746,14 +1746,14 @@ PODS:
     - FlutterMacOS
   - workmanager_apple (0.0.1):
     - Flutter
-  - ZIPFoundation (0.9.19)
+  - ZIPFoundation (0.9.20)
 
 DEPENDENCIES:
   - app_links (from `.symlinks/plugins/app_links/ios`)
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - background_fetch (from `.symlinks/plugins/background_fetch/ios`)
   - bonsoir_darwin (from `.symlinks/plugins/bonsoir_darwin/darwin`)
-  - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
+  - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/darwin`)
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
   - cloud_functions (from `.symlinks/plugins/cloud_functions/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
@@ -1873,7 +1873,7 @@ EXTERNAL SOURCES:
   bonsoir_darwin:
     :path: ".symlinks/plugins/bonsoir_darwin/darwin"
   camera_avfoundation:
-    :path: ".symlinks/plugins/camera_avfoundation/ios"
+    :path: ".symlinks/plugins/camera_avfoundation/darwin"
   cloud_firestore:
     :path: ".symlinks/plugins/cloud_firestore/ios"
   cloud_functions:
@@ -2016,7 +2016,7 @@ SPEC CHECKSUMS:
   flutter_app_group_directory: 55b5362007d1c0cb45dc1dd1e94f67d615f45a6b
   flutter_blue_plus_darwin: ee2377ea51a6c9e481f2ed76ec597717ef5d287d
   flutter_compass: b236ab69b61545cce89fd58527f401a7587d5cc1
-  flutter_foreground_task: a159d2c2173b33699ddb3e6c2a067045d7cebb89
+  flutter_foreground_task: ff24d2fb1aefdcde8ed192e8b0574348aab3a30e
   flutter_image_compress_common: 11d5dcfb36f4ded92320bfa896261813a073240e
   flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
   flutter_local_notifications: 643a3eda1ce1c0599413ca31672536d423dee214
@@ -2043,20 +2043,20 @@ SPEC CHECKSUMS:
   live_activities: 4dfa736d0736e1c77866a2f9c056a76513cc9e7b
   mobile_scanner: 9157936403f5a0644ca3779a38ff8404c5434a93
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
-  nordic_dfu: 05681503e4969f1dfe11903be2bf8840bf5691c9
-  NordicDFU: 116a4ec458945889f8e0e71759e03b23c39c3482
+  nordic_dfu: 40bf61abb1b430a79d107e8706d74b0489925ed0
+  NordicDFU: a9b14cc3f36c85f9056182d9e8f5ec2ada0d2156
   open_mail_launcher: 8b06b3dbafef4c37d04c327ffd7600b2af7ce2e0
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94
   package_info_plus: af8e2ca6888548050f16fa2f1938db7b5a5df499
-  permission_handler_apple: 4ed2196e43d0651e8ff7ca3483a069d469701f2d
+  permission_handler_apple: 92d754bbaa7361d436db2d6c3c1c2a0fdcec462e
   photo_manager: c303e4476f6c220274119f0212a7753e45edd4a2
   PromisesObjC: 752c3227f599e3467650e47ea36f433eeb10c273
   PromisesSwift: 217dea0fd5d2ad65222a109c48698add13cc1c5b
-  purchases_flutter: 174b063d0e6f1f31424adedfcc3a7cda540fe026
-  PurchasesHybridCommon: 8563d6a7d832332beb9b30478dbe56eeaa0dd425
+  purchases_flutter: e6d8940221d596f33a25f789a76b63d0ec8c0dd3
+  PurchasesHybridCommon: d3ac1e960252e66c535d5bde6ac6dc7c9716d7eb
   RecaptchaInterop: 11e0b637842dfb48308d242afc3f448062325aba
   record_ios: 390a30c7caaf8b5d0fb1cb1d2fd5064b48b4520c
-  RevenueCat: a83de0391a1061302699cb55eb1ff0662f5768b5
+  RevenueCat: fafa0b7c0c2f6b04333f4a2c81624723c672f38e
   SDWebImage: e9fc87c1aab89a8ab1bbd74eba378c6f53be8abf
   SDWebImageWebPCoder: 0e06e365080397465cc73a7a9b472d8a3bd0f377
   sensors_plus: b70a93b69dafdabd26ce4ac3f4d0529ab9acc4ca
@@ -2081,7 +2081,7 @@ SPEC CHECKSUMS:
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
   video_player_avfoundation: 3453f792138786248960ca029747fcd9f318ef52
   workmanager_apple: 904529ae31e97fc5be632cf628507652294a0778
-  ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
+  ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
 
 PODFILE CHECKSUM: 9bed10193d9b4b81a0441c1aff9cf65c6022f036
 

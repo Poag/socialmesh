@@ -7,18 +7,29 @@ import '../../core/logging.dart';
 
 /// Manages microphone permission for voice message recording.
 abstract final class VoicePermissionService {
+  /// Requests the [Permission.microphone] permission and returns the
+  /// resulting status.
+  ///
+  /// On Android only the result of a request can report a permanent denial;
+  /// a status read reports plain denial for every refused permission. Callers
+  /// that need to send the user to system Settings branch on this result.
+  static Future<PermissionStatus> requestMicrophoneStatus() async {
+    try {
+      final status = await Permission.microphone.request();
+      AppLogging.voice('microphone permission status: $status');
+      return status;
+    } catch (e) {
+      AppLogging.voice('error requesting microphone permission: $e');
+      return PermissionStatus.denied;
+    }
+  }
+
   /// Requests the [Permission.microphone] permission.
   ///
   /// Returns true if the permission is granted or already was granted.
   static Future<bool> requestMicrophonePermission() async {
-    try {
-      final status = await Permission.microphone.request();
-      AppLogging.voice('microphone permission status: $status');
-      return status.isGranted || status.isLimited;
-    } catch (e) {
-      AppLogging.voice('error requesting microphone permission: $e');
-      return false;
-    }
+    final status = await requestMicrophoneStatus();
+    return status.isGranted || status.isLimited;
   }
 
   /// Returns true if the microphone permission is currently granted.
@@ -28,19 +39,6 @@ abstract final class VoicePermissionService {
       return status.isGranted || status.isLimited;
     } catch (e) {
       AppLogging.voice('error checking microphone permission: $e');
-      return false;
-    }
-  }
-
-  /// Returns true if the user has permanently denied the microphone permission.
-  ///
-  /// When this returns true the app should direct the user to system Settings.
-  static Future<bool> isMicrophonePermanentlyDenied() async {
-    try {
-      final status = await Permission.microphone.status;
-      return status.isPermanentlyDenied;
-    } catch (e) {
-      AppLogging.voice('error checking microphone permanent-denial status: $e');
       return false;
     }
   }
