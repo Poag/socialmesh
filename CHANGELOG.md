@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.68.0] - 2026-09-21
+
+### Fixed (Connected radio missing from Radio Data)
+
+- Settings > Radio Data now lists the connected radio under In Use even when it shares another radio's data, with the dataset it stores into listed beside it, instead of showing only that other radio as if it were the one connected (#336, thanks markusgritsch). A radio that shared another's data and then had its own leftover dataset deleted also vanished from the screen entirely: the list was built from the dataset directories on disk, and the sharing arrangement lived only in preferences, so the radio kept resolving to the shared dataset with no row to show it and no way to stop sharing. Sharing radios are now listed whether or not they still hold data of their own, and deleting a sharing radio's leftover data no longer discards its name, Bluetooth id mapping and key along with it. A connect that opened a provisional dataset before the identity arrived also left the radio's name on that leftover, which then read as a radio that never reported its node number; the name now follows the radio
+
 ## [1.67.0] - 2026-09-17
 
 ### Fixed (Bluetooth connect paced by the poll delay)

@@ -119,13 +119,27 @@ class RadioScopeInfo {
     required this.label,
     required this.sizeBytes,
     required this.isCurrent,
+    this.isConnected = false,
+    this.isStored = true,
     this.sharesWith,
   });
 
   final String key;
   final String? label;
   final int sizeBytes;
+
+  /// Whether this is the dataset the open stores read and write. When the
+  /// connected radio shares another radio's data this is that other radio.
   final bool isCurrent;
+
+  /// Whether this is the radio the session is bound to. Differs from
+  /// [isCurrent] only while that radio shares another radio's data.
+  final bool isConnected;
+
+  /// Whether the radio has a directory of its own on disk. A radio that
+  /// shares another's data and whose own dataset was deleted has none, and
+  /// is listed only so its sharing arrangement stays visible and undoable.
+  final bool isStored;
 
   /// Scope whose data this radio reads and writes instead of its own, or
   /// null when it uses its own. See [RadioScope.shareScope].
@@ -284,6 +298,7 @@ class RadioScope {
     }
     // Bookkeeping stays with the radio's own identity; storage follows any
     // sharing arrangement it is part of.
+    _lastIdentity = identity;
     final target = _resolveAlias(prefs, identity);
     // Logged on every connect, including when nothing changes: a wrong
     // binding shows up as a connect that quietly resolves to another
@@ -372,6 +387,10 @@ class RadioScope {
       if (isProvisionalRadioScopeKey(_current)) {
         await _promoteDirectory(from: _current, to: target);
         await _promotePreferences(prefs, from: _current, to: target);
+        // The advertised name belongs to the radio, not to the shared
+        // dataset; leaving it on a kept provisional directory would list
+        // that leftover under the radio's name as if it never identified.
+        await _promoteLabel(prefs, from: _current, to: identity);
       }
       await _setCurrent(prefs, target);
       _changes.add(target);
@@ -442,23 +461,34 @@ class RadioScope {
     return true;
   }
 
-  /// Every stored radio profile, largest first.
+  /// Every known radio profile, largest first: each scope directory on
+  /// disk, plus every radio that shares another's data, whether or not it
+  /// still has a directory of its own. A sharing radio whose own leftover
+  /// dataset was deleted is otherwise invisible while its identity keeps
+  /// resolving to the shared scope, with no way to undo it.
   Future<List<RadioScopeInfo>> list() async {
     final prefs = await SharedPreferences.getInstance();
     final labels = _readMap(prefs, _prefsLabelsKey);
     final aliases = _readMap(prefs, _prefsAliasesKey);
     final root = await _scopeRoot(create: false);
-    if (!await root.exists()) return const [];
+    final stored = <String, Directory>{};
+    if (await root.exists()) {
+      await for (final entity in root.list(followLinks: false)) {
+        if (entity is Directory) stored[p.basename(entity.path)] = entity;
+      }
+    }
+    final keys = <String>{...stored.keys, ...aliases.keys};
     final scopes = <RadioScopeInfo>[];
-    await for (final entity in root.list(followLinks: false)) {
-      if (entity is! Directory) continue;
-      final key = p.basename(entity.path);
+    for (final key in keys) {
+      final dir = stored[key];
       scopes.add(
         RadioScopeInfo(
           key: key,
           label: labels[key],
-          sizeBytes: await _directorySize(entity),
+          sizeBytes: dir == null ? 0 : await _directorySize(dir),
           isCurrent: key == _current,
+          isConnected: key == _lastIdentity,
+          isStored: dir != null,
           sharesWith: aliases[key],
         ),
       );
@@ -483,19 +513,23 @@ class RadioScope {
     for (final base in kRadioScopedPreferenceKeys) {
       await prefs.remove(_scopedPrefsKey(key, base));
     }
-    final labels = _readMap(prefs, _prefsLabelsKey)..remove(key);
-    await _writeMap(prefs, _prefsLabelsKey, labels);
-    final devices = _readMap(prefs, _prefsDeviceMapKey)
-      ..removeWhere((_, scope) => scope == key);
-    await _writeMap(prefs, _prefsDeviceMapKey, devices);
-    final keys = _readMap(prefs, _prefsPublicKeysKey)..remove(key);
-    await _writeMap(prefs, _prefsPublicKeysKey, keys);
     // A deleted dataset can no longer be shared into; radios that shared it
     // go back to their own. A radio whose own leftover data is deleted keeps
-    // its sharing arrangement.
-    final aliases = _readMap(prefs, _prefsAliasesKey)
-      ..removeWhere((_, into) => into == key);
+    // its sharing arrangement, and with it the name, device ids and key that
+    // identify it: only its stored data was asked for.
+    final aliases = _readMap(prefs, _prefsAliasesKey);
+    final keepsIdentity = aliases.containsKey(key);
+    aliases.removeWhere((_, into) => into == key);
     await _writeMap(prefs, _prefsAliasesKey, aliases);
+    if (!keepsIdentity) {
+      final labels = _readMap(prefs, _prefsLabelsKey)..remove(key);
+      await _writeMap(prefs, _prefsLabelsKey, labels);
+      final devices = _readMap(prefs, _prefsDeviceMapKey)
+        ..removeWhere((_, scope) => scope == key);
+      await _writeMap(prefs, _prefsDeviceMapKey, devices);
+      final keys = _readMap(prefs, _prefsPublicKeysKey)..remove(key);
+      await _writeMap(prefs, _prefsPublicKeysKey, keys);
+    }
     AppLogging.storage('RADIO SCOPE: deleted scope $key');
     return true;
   }

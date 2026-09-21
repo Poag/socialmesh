@@ -99,8 +99,12 @@ class RadioProfilesScreen extends ConsumerWidget {
       return [SliverFillRemaining(hasScrollBody: false, child: _EmptyState())];
     }
 
-    final current = scopes.where((s) => s.isCurrent).toList();
-    final stored = scopes.where((s) => !s.isCurrent).toList();
+    // In use: the connected radio and, when it shares another radio's
+    // data, the dataset it is storing into. Neither can be deleted while
+    // the stores are open on it.
+    bool inUse(RadioScopeInfo s) => s.isCurrent || s.isConnected;
+    final current = scopes.where(inUse).toList();
+    final stored = scopes.where((s) => !inUse(s)).toList();
     final byKey = {for (final s in scopes) s.key: s};
 
     // A radio can share the data of any other identified radio that owns
@@ -147,7 +151,10 @@ class RadioProfilesScreen extends ConsumerWidget {
             SettingsSectionHeader(
               title: context.l10n.radioProfilesSectionStored,
             ),
-            for (final scope in stored) tileFor(scope, deletable: true),
+            // A sharing radio with no dataset of its own has nothing to
+            // delete; stop sharing is its only action.
+            for (final scope in stored)
+              tileFor(scope, deletable: scope.isStored),
           ]),
         ),
     ];
@@ -382,12 +389,14 @@ class _RadioProfileTile extends StatelessWidget {
       // A radio that never reported its identity carries a two-line
       // subtitle, so the row tops out rather than centring around it.
       crossAxisAlignment: CrossAxisAlignment.start,
-      icon: scope.isCurrent
+      icon: scope.isConnected
           ? Icons.router
           : sharing != null
           ? Icons.call_merge
           : Icons.storage_outlined,
-      iconColor: scope.isCurrent ? SemanticColors.success : null,
+      iconColor: scope.isCurrent || scope.isConnected
+          ? SemanticColors.success
+          : null,
       title: _displayName(context, scope),
       subtitle: subtitle,
       trailing: actions.isEmpty

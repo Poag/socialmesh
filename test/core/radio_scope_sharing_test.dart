@@ -228,5 +228,112 @@ void main() {
       expect(RadioScope.instance.currentKey, 'node-a6960864');
       expect(scopeDir(provisional).existsSync(), isFalse);
     });
+
+    test(
+      'a sharing radio stays listed after its own dataset is deleted',
+      () async {
+        await RadioScope.instance.useNodeNum(home, label: 'Home');
+        await writeScopedFile('messages.db', 'home');
+        await RadioScope.instance.useNodeNum(
+          mobile,
+          deviceId: 'ble:mobile',
+          label: 'Mobile',
+        );
+        await writeScopedFile('messages.db', 'mobile');
+        await RadioScope.instance.shareScope(
+          key: 'node-6944378a',
+          into: 'node-a6960864',
+        );
+        expect(await RadioScope.instance.deleteScope('node-6944378a'), isTrue);
+        expect(scopeDir('node-6944378a').existsSync(), isFalse);
+
+        // The radio is still connected and still resolves to the shared
+        // dataset, so it must remain visible with its arrangement.
+        var scopes = await RadioScope.instance.list();
+        final mobileInfo = scopes.firstWhere((s) => s.key == 'node-6944378a');
+        expect(mobileInfo.sharesWith, 'node-a6960864');
+        expect(mobileInfo.isStored, isFalse);
+        expect(mobileInfo.isConnected, isTrue);
+        expect(mobileInfo.isCurrent, isFalse);
+        expect(mobileInfo.label, 'Mobile');
+        final homeInfo = scopes.firstWhere((s) => s.key == 'node-a6960864');
+        expect(homeInfo.isCurrent, isTrue);
+        expect(homeInfo.isConnected, isFalse);
+
+        // Reconnecting under its remembered device id keeps it that way.
+        await RadioScope.instance.useDevice(deviceId: 'ble:mobile');
+        await RadioScope.instance.useNodeNum(mobile, deviceId: 'ble:mobile');
+        expect(RadioScope.instance.currentKey, 'node-a6960864');
+        scopes = await RadioScope.instance.list();
+        expect(
+          scopes.firstWhere((s) => s.key == 'node-6944378a').isConnected,
+          isTrue,
+        );
+
+        // Stop sharing is the way out: the radio gets its own dataset back
+        // and, once it has one, is listed as stored again.
+        expect(await RadioScope.instance.stopSharing('node-6944378a'), isTrue);
+        expect(RadioScope.instance.currentKey, 'node-6944378a');
+        await writeScopedFile('messages.db', 'fresh');
+        scopes = await RadioScope.instance.list();
+        final again = scopes.firstWhere((s) => s.key == 'node-6944378a');
+        expect(again.sharesWith, isNull);
+        expect(again.isStored, isTrue);
+        expect(again.isCurrent, isTrue);
+      },
+    );
+
+    test(
+      'the connected radio is known from the connect, not the identity',
+      () async {
+        await RadioScope.instance.useNodeNum(home);
+        await writeScopedFile('messages.db', 'home');
+        await RadioScope.instance.useNodeNum(mobile, deviceId: 'ble:mobile');
+        await RadioScope.instance.shareScope(
+          key: 'node-6944378a',
+          into: 'node-a6960864',
+        );
+        await RadioScope.instance.useNodeNum(third);
+
+        await RadioScope.instance.useDevice(deviceId: 'ble:mobile');
+        final scopes = await RadioScope.instance.list();
+        expect(
+          scopes.firstWhere((s) => s.key == 'node-6944378a').isConnected,
+          isTrue,
+        );
+        expect(
+          scopes.firstWhere((s) => s.key == 'node-a6960864').isCurrent,
+          isTrue,
+        );
+      },
+    );
+
+    test('a kept provisional directory does not keep the radio name', () async {
+      await RadioScope.instance.useNodeNum(home);
+      await writeScopedFile('messages.db', 'home');
+      await RadioScope.instance.useNodeNum(mobile);
+      await RadioScope.instance.shareScope(
+        key: 'node-6944378a',
+        into: 'node-a6960864',
+      );
+      await RadioScope.instance.useNodeNum(third);
+
+      await RadioScope.instance.useDevice(
+        deviceId: 'ble:new-uuid',
+        label: 'Mobile',
+      );
+      final provisional = RadioScope.instance.currentKey;
+      // Enough bytes that promotion keeps the provisional directory.
+      await writeScopedFile('messages.db', 'x' * (65 * 1024));
+      await RadioScope.instance.useNodeNum(mobile, deviceId: 'ble:new-uuid');
+
+      expect(scopeDir(provisional).existsSync(), isTrue);
+      final scopes = await RadioScope.instance.list();
+      expect(scopes.firstWhere((s) => s.key == provisional).label, isNull);
+      expect(
+        scopes.firstWhere((s) => s.key == 'node-6944378a').label,
+        'Mobile',
+      );
+    });
   });
 }

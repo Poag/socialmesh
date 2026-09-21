@@ -29,6 +29,19 @@ const _radioB = RadioScopeInfo(
   isCurrent: false,
 );
 
+// The connected radio shares [_radioA]'s data and its own leftover dataset
+// was deleted, so it has no directory: the state a sharing radio is in once
+// its stored entry is removed.
+const _connectedSharing = RadioScopeInfo(
+  key: 'node-4d39f3ef',
+  label: 'MGrT_5949',
+  sizeBytes: 0,
+  isCurrent: false,
+  isConnected: true,
+  isStored: false,
+  sharesWith: 'node-a6960864',
+);
+
 const _unidentified = RadioScopeInfo(
   key: 'dev-4f9dc5ee',
   label: null,
@@ -114,4 +127,22 @@ void main() {
     expect(find.byType(AnimatedEmptyState), findsOneWidget);
     expect(find.byIcon(Icons.delete_outline), findsNothing);
   });
+
+  testWidgets(
+    'lists the connected radio under in use while it shares another dataset',
+    (tester) async {
+      await _pumpScreen(tester, [_radioA, _connectedSharing, _radioB]);
+
+      expect(find.text('MGrT_5949'), findsOneWidget);
+      expect(find.textContaining('Meshtastic 0864'), findsWidgets);
+      // The connected radio is the one drawn as a radio; the dataset it
+      // stores into is not, or the screen would claim another radio is
+      // connected.
+      expect(find.byIcon(Icons.router), findsOneWidget);
+      // Both in-use rows are undeletable; only the third radio can go, and
+      // the sharing radio's only action is to stop sharing.
+      expect(find.byIcon(Icons.delete_outline), findsOneWidget);
+      expect(find.byIcon(Icons.call_split), findsOneWidget);
+    },
+  );
 }
