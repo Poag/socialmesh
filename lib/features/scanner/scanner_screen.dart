@@ -94,6 +94,10 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
   bool _scanning = false;
   bool _connecting = false;
   bool _autoReconnecting = false;
+  // Bumped when an auto-reconnect attempt starts and when the user cancels
+  // one, so a cancelled attempt's scan loop stops and does not start a
+  // second manual scan on top of the one Cancel started.
+  int _autoReconnectRun = 0;
   String? _errorMessage;
   String? _savedDeviceNotFoundName;
   bool _showPairingInvalidationHint = false;
@@ -813,6 +817,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
 
     if (!mounted) return;
 
+    final run = ++_autoReconnectRun;
     safeSetState(() {
       _autoReconnecting = true;
     });
@@ -830,7 +835,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
       DeviceInfo? lastDevice;
 
       await for (final device in scanStream) {
-        if (!mounted) break;
+        if (!mounted || run != _autoReconnectRun) break;
         AppLogging.connection(
           '📡 SCANNER: Auto-reconnect found ${device.id} (looking for $lastDeviceId)',
         );
@@ -850,7 +855,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
         }
       }
 
-      if (!mounted) return;
+      if (!mounted || run != _autoReconnectRun) return;
 
       if (lastDevice != null) {
         AppLogging.connection(
@@ -873,11 +878,37 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
       }
     } catch (e) {
       AppLogging.connection('📡 SCANNER: Auto-reconnect failed: $e');
+      if (run != _autoReconnectRun) return;
       safeSetState(() {
         _autoReconnecting = false;
       });
       if (mounted) _startScan();
     }
+  }
+
+  // Cancel on the auto-reconnect overlay.
+  //
+  // The overlay is shown for the Scanner's own attempt and, more often,
+  // for the background reconnect that was already running when the
+  // Scanner opened. Clearing the overlay alone leaves that background
+  // attempt scanning and retrying, and while it holds the adapter the
+  // manual scan is blocked or contended, so the screen comes back with
+  // no Bluetooth list at all. The authoritative cancel stops the scan,
+  // idles the reconnect state and latches userDisconnected so nothing
+  // re-arms it; the manual scan starts once that has settled.
+  Future<void> _cancelAutoReconnect() async {
+    AppLogging.connection('SCANNER_AUTORECONNECT_CANCEL_TAPPED');
+    _backgroundReconnectSub?.close();
+    _backgroundReconnectSub = null;
+    _autoReconnectRun++;
+    final notifier = ref.read(conn.deviceConnectionProvider.notifier);
+    safeSetState(() {
+      _connecting = false;
+      _autoReconnecting = false;
+    });
+    await notifier.userCancelAutoReconnect();
+    if (!mounted) return;
+    await _startScan();
   }
 
   /// Start a BLE scan.
@@ -2147,13 +2178,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
       showMeshNode: true,
       showCancel: _autoReconnecting,
       accentColor: context.accentColor,
-      onCancel: () {
-        setState(() {
-          _connecting = false;
-          _autoReconnecting = false;
-        });
-        _startScan();
-      },
+      onCancel: () => unawaited(_cancelAutoReconnect()),
     );
   }
 

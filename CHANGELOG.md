@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Settings > Radio Data now lists the connected radio under In Use even when it shares another radio's data, with the dataset it stores into listed beside it, instead of showing only that other radio as if it were the one connected (#336, thanks markusgritsch). A radio that shared another's data and then had its own leftover dataset deleted also vanished from the screen entirely: the list was built from the dataset directories on disk, and the sharing arrangement lived only in preferences, so the radio kept resolving to the shared dataset with no row to show it and no way to stop sharing. Sharing radios are now listed whether or not they still hold data of their own, and deleting a sharing radio's leftover data no longer discards its name, Bluetooth id mapping and key along with it. A connect that opened a provisional dataset before the identity arrived also left the radio's name on that leftover, which then read as a radio that never reported its node number; the name now follows the radio
 
+### Fixed (Cancelling auto-reconnect on the Devices screen left it empty)
+
+- Tapping Cancel on the Devices screen while it reads "Auto-reconnecting..." now stops the reconnect it was waiting on and then scans, instead of leaving a screen with no Bluetooth list and nothing to tap (#352, thanks markusgritsch). The screen showed that overlay for the background reconnect already running when it opened, but Cancel only cleared the overlay: the background attempt kept scanning and retrying, held the Bluetooth adapter, and the manual scan that Cancel started was blocked behind it. Cancel now runs the same authoritative stop as the Cancel on the top banner, waits for it, and only then scans; a cancelled attempt of the screen's own can no longer start a second scan of its own
+
 ## [1.67.0] - 2026-09-17
 
 ### Fixed (Bluetooth connect paced by the poll delay)
