@@ -47,6 +47,11 @@ class PlatformCapabilities {
   /// web cannot deliver mesh-radio-grade background GPS.
   final bool supportsBackgroundLocation;
 
+  /// An OS foreground service can hold the radio link open while the app
+  /// is backgrounded. Android only; iOS keeps the link through its own
+  /// background BLE modes and never runs the service.
+  final bool supportsForegroundService;
+
   /// File export (share sheet on mobile, Save dialog on desktop, browser
   /// Blob download on web) is reachable.
   final bool supportsFileExport;
@@ -74,6 +79,7 @@ class PlatformCapabilities {
     required this.supportsSerial,
     required this.supportsNotifications,
     required this.supportsBackgroundLocation,
+    required this.supportsForegroundService,
     required this.supportsFileExport,
     required this.supportsSecureStorage,
     required this.supportsLocalDatabase,
@@ -124,6 +130,7 @@ class PlatformCapabilities {
       'ble=${bundle.supportsBle} tcp=${bundle.supportsTcp} '
       'mqtt=${bundle.supportsMqtt} serial=${bundle.supportsSerial} '
       'notif=${bundle.supportsNotifications} bgLoc=${bundle.supportsBackgroundLocation} '
+      'fgSvc=${bundle.supportsForegroundService} '
       'fileExport=${bundle.supportsFileExport} secStore=${bundle.supportsSecureStorage} '
       'localDb=${bundle.supportsLocalDatabase} webBridge=${bundle.supportsWebBridge}',
     );
@@ -141,6 +148,7 @@ class PlatformCapabilities {
     required bool supportsSerial,
     required bool supportsNotifications,
     required bool supportsBackgroundLocation,
+    required bool supportsForegroundService,
     required bool supportsFileExport,
     required bool supportsSecureStorage,
     required bool supportsLocalDatabase,
@@ -154,6 +162,7 @@ class PlatformCapabilities {
       supportsSerial: supportsSerial,
       supportsNotifications: supportsNotifications,
       supportsBackgroundLocation: supportsBackgroundLocation,
+      supportsForegroundService: supportsForegroundService,
       supportsFileExport: supportsFileExport,
       supportsSecureStorage: supportsSecureStorage,
       supportsLocalDatabase: supportsLocalDatabase,
@@ -202,6 +211,7 @@ class PlatformCapabilities {
     supportsSerial: false,
     supportsNotifications: true,
     supportsBackgroundLocation: true,
+    supportsForegroundService: false,
     supportsFileExport: true,
     supportsSecureStorage: true,
     supportsLocalDatabase: true,
@@ -216,6 +226,7 @@ class PlatformCapabilities {
     supportsSerial: true,
     supportsNotifications: true,
     supportsBackgroundLocation: true,
+    supportsForegroundService: true,
     supportsFileExport: true,
     supportsSecureStorage: true,
     supportsLocalDatabase: true,
@@ -230,6 +241,7 @@ class PlatformCapabilities {
     supportsSerial: false,
     supportsNotifications: false,
     supportsBackgroundLocation: false,
+    supportsForegroundService: false,
     supportsFileExport: true,
     supportsSecureStorage: true,
     supportsLocalDatabase: true,
@@ -244,6 +256,7 @@ class PlatformCapabilities {
     supportsSerial: false,
     supportsNotifications: false,
     supportsBackgroundLocation: false,
+    supportsForegroundService: false,
     supportsFileExport: true,
     supportsSecureStorage: false,
     supportsLocalDatabase: false,
@@ -262,6 +275,7 @@ class PlatformCapabilities {
           supportsSerial == other.supportsSerial &&
           supportsNotifications == other.supportsNotifications &&
           supportsBackgroundLocation == other.supportsBackgroundLocation &&
+          supportsForegroundService == other.supportsForegroundService &&
           supportsFileExport == other.supportsFileExport &&
           supportsSecureStorage == other.supportsSecureStorage &&
           supportsLocalDatabase == other.supportsLocalDatabase &&
@@ -276,6 +290,7 @@ class PlatformCapabilities {
     supportsSerial,
     supportsNotifications,
     supportsBackgroundLocation,
+    supportsForegroundService,
     supportsFileExport,
     supportsSecureStorage,
     supportsLocalDatabase,
@@ -287,7 +302,8 @@ class PlatformCapabilities {
       'PlatformCapabilities(family: ${platformFamily.name}, '
       'ble: $supportsBle, tcp: $supportsTcp, mqtt: $supportsMqtt, '
       'serial: $supportsSerial, notif: $supportsNotifications, '
-      'bgLoc: $supportsBackgroundLocation, fileExport: $supportsFileExport, '
+      'bgLoc: $supportsBackgroundLocation, fgSvc: $supportsForegroundService, '
+      'fileExport: $supportsFileExport, '
       'secStore: $supportsSecureStorage, localDb: $supportsLocalDatabase, '
       'webBridge: $supportsWebBridge)';
 }

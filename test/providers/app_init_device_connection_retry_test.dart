@@ -94,6 +94,7 @@ void main() {
     supportsSerial: false,
     supportsNotifications: false,
     supportsBackgroundLocation: false,
+    supportsForegroundService: false,
     supportsFileExport: false,
     supportsSecureStorage: false,
     supportsLocalDatabase: false,

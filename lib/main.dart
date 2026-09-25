@@ -743,8 +743,9 @@ class _SocialMeshAppState extends ConsumerState<SocialMeshApp>
       // is internally gated on WCSession.isSupported() and on the
       // WATCH_COMPANION_ENABLED feature flag; on Android / iPad-only
       // builds this resolves to a no-op. Idempotent: safe under hot
-      // restart.
-      if (Platform.isIOS) {
+      // restart. `kIsWeb` is checked first because `Platform` throws in a
+      // browser tab.
+      if (!kIsWeb && Platform.isIOS) {
         unawaited(ref.read(watchCompanionChannelBridgeProvider).start());
         // CarPlay communication: in-process SiriKit intents (send/search/
         // mark-read) relayed to ProtocolService + the message store via the

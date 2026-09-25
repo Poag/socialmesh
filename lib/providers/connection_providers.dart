@@ -22,6 +22,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/ble_system_devices.dart';
 import '../core/logging.dart';
+import '../core/platform/platform_capabilities_provider.dart';
 import '../core/safety/error_handler.dart';
 import '../core/transport.dart';
 import '../services/protocol/meshtastic_readiness_flag.dart';
@@ -3370,15 +3371,19 @@ final isBackgroundServiceRunningProvider = Provider<bool>((ref) {
 /// notifier watches those providers and pushes the stats to the service,
 /// debounced to coalesce the NodeInfo burst the radio dumps on connect.
 ///
-/// No-op on iOS (the foreground service is Android-only) — kept alive at app
-/// level via a `ref.watch` in the root widget.
+/// No-op wherever the host has no foreground service (everything but
+/// Android); the check reads the capability bundle rather than `Platform`,
+/// which throws on web. Kept alive at app level via a `ref.watch` in the
+/// root widget.
 class BackgroundNotificationUpdaterNotifier extends Notifier<bool> {
   Timer? _debounce;
   static const _debounceDelay = Duration(milliseconds: 750);
 
   @override
   bool build() {
-    if (!Platform.isAndroid) return false;
+    if (!ref.read(platformCapabilitiesProvider).supportsForegroundService) {
+      return false;
+    }
 
     ref.onDispose(() => _debounce?.cancel());
 
@@ -3404,7 +3409,9 @@ class BackgroundNotificationUpdaterNotifier extends Notifier<bool> {
   /// Compute the current mesh stats and push them to the foreground service.
   /// Safe to call when the service is stopped — it no-ops internally.
   void refreshNow() {
-    if (!Platform.isAndroid) return;
+    if (!ref.read(platformCapabilitiesProvider).supportsForegroundService) {
+      return;
+    }
     if (!BackgroundBleService.instance.isRunning) return;
 
     final nodes = ref.read(nodesProvider);

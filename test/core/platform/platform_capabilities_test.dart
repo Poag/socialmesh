@@ -27,6 +27,11 @@ void main() {
       );
       expect(caps.supportsNotifications, isTrue);
       expect(caps.supportsBackgroundLocation, isTrue);
+      expect(
+        caps.supportsForegroundService,
+        isFalse,
+        reason: 'the foreground service is Android only',
+      );
       expect(caps.supportsFileExport, isTrue);
       expect(caps.supportsSecureStorage, isTrue);
       expect(caps.supportsLocalDatabase, isTrue);
@@ -46,6 +51,7 @@ void main() {
       expect(caps.supportsSerial, isTrue, reason: 'Android exposes USB serial');
       expect(caps.supportsNotifications, isTrue);
       expect(caps.supportsBackgroundLocation, isTrue);
+      expect(caps.supportsForegroundService, isTrue);
       expect(caps.supportsFileExport, isTrue);
       expect(caps.supportsSecureStorage, isTrue);
       expect(caps.supportsLocalDatabase, isTrue);
@@ -75,6 +81,7 @@ void main() {
           reason: 'foundation pass defers desktop notification wiring',
         );
         expect(caps.supportsBackgroundLocation, isFalse);
+        expect(caps.supportsForegroundService, isFalse);
         expect(caps.supportsFileExport, isTrue);
         expect(caps.supportsSecureStorage, isTrue);
         expect(caps.supportsLocalDatabase, isTrue);
@@ -119,6 +126,7 @@ void main() {
         supportsSerial: false,
         supportsNotifications: false,
         supportsBackgroundLocation: false,
+        supportsForegroundService: false,
         supportsFileExport: true,
         supportsSecureStorage: false,
         supportsLocalDatabase: false,
@@ -140,6 +148,7 @@ void main() {
         supportsSerial: false,
         supportsNotifications: false,
         supportsBackgroundLocation: false,
+        supportsForegroundService: false,
         supportsFileExport: true,
         supportsSecureStorage: true,
         supportsLocalDatabase: true,
@@ -153,6 +162,7 @@ void main() {
         supportsSerial: false,
         supportsNotifications: false,
         supportsBackgroundLocation: false,
+        supportsForegroundService: false,
         supportsFileExport: true,
         supportsSecureStorage: true,
         supportsLocalDatabase: true,

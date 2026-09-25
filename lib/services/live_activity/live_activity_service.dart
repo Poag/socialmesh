@@ -2,6 +2,7 @@
 // SPDX-FileCopyrightText: 2025-2026 gotnull (developer@socialmesh.app)
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:live_activities/live_activities.dart';
 import 'package:live_activities/models/activity_update.dart';
 import 'package:live_activities/models/live_activity_state.dart';
@@ -19,7 +20,9 @@ class LiveActivityService {
   bool _initialized = false;
 
   /// Whether Live Activities are supported on this device
-  bool get isSupported => Platform.isIOS;
+  // kIsWeb first: Platform throws in a browser tab, and this getter runs at
+  // boot from the manager notifier.
+  bool get isSupported => !kIsWeb && Platform.isIOS;
 
   /// Whether a Live Activity is currently running
   bool get isActive => _currentActivityId != null;
