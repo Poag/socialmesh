@@ -5,6 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.69.0] - 2026-09-25
+
+### Fixed (Radio Data kept the previous radio under In Use)
+
+- Settings > Radio Data now follows the connected radio when you switch between two radios that share the same dataset (#336, thanks markusgritsch). MGrT and MGrW both shared MGrX's data. Disconnecting MGrT and connecting MGrW therefore changed nothing about the dataset in use, and the list only refreshed on a dataset change, so a Radio Data screen already opened during the MGrT connect went on saying MGrT until the app was force quit. The list now also refreshes when the connected radio changes. Reproduced and verified against three local Meshtastic radios in the simulator
+
+### Fixed (Web build broken by the canvas frame hash)
+
+- `flutter build web` compiles again. The canvas frame fingerprint used 64-bit FNV-1a literals, which JavaScript cannot represent, and had failed the web build since 24th May. The fingerprint is compared only against itself in memory and is never stored or sent. It now uses 32-bit FNV-1a with a split multiply that stays under 2^53, pinned to the published test vectors on the VM and under Chrome
+
+### Changed (Dependencies)
+
+- Bumped workmanager 0.9.0+3 to 0.10.10 (Android 16 background task fixes; adds macOS registration), firebase_storage 13.5.0 to 13.6.0, firebase_crashlytics 5.3.0 to 5.4.0, cloud_functions 6.4.0 to 6.5.0, protobuf 6.0.0 to 6.1.0, bonsoir 7.1.4 to 7.1.5, lottie 3.5.1 to 3.6.1 and vector_math 2.4.2 to 2.4.3
+- Bumped firebase_auth 6.6.1 to 6.7.0 with its platform interface and web packages, and flutter_secure_storage 10.3.1 to 11.2.0, which drops the deprecated Android EncryptedSharedPreferences backend the app had already migrated away from in February 2026
+
 ## [1.68.0] - 2026-09-21
 
 ### Fixed (Connected radio missing from Radio Data)

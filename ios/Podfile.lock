@@ -1259,7 +1259,7 @@ PODS:
     - firebase_core
     - FirebaseAnalytics (= 12.18.0)
     - Flutter
-  - firebase_auth (6.6.1):
+  - firebase_auth (6.7.0):
     - Firebase/Auth (= 12.18.0)
     - firebase_core
     - Flutter
@@ -1989,7 +1989,7 @@ SPEC CHECKSUMS:
   file_picker: 70164d9778c42c47218d6cd79ce435de0856b11a
   Firebase: 5523dd53ebe603451b4e1befcd99fa20a5c015cd
   firebase_analytics: eabab995ffa6e93bf1888e573eda3a8264c0f30f
-  firebase_auth: 4c0f66df5d18671fd5ce6d6e9eb5ebdb653e03e5
+  firebase_auth: befbcbcb38b898abe65f270967a845f61716ce1b
   firebase_core: 22b31970001508f6e63945bedcb7b9de68819aa5
   firebase_crashlytics: 91d8a7da161e84a5cc0366faa1f188ca80ad1a45
   firebase_messaging: e0eae0e66bd04d3c1856ad08ad84ac75e0673a55
@@ -2020,7 +2020,7 @@ SPEC CHECKSUMS:
   flutter_image_compress_common: 11d5dcfb36f4ded92320bfa896261813a073240e
   flutter_inappwebview_ios: b89ba3482b96fb25e00c967aae065701b66e9b99
   flutter_local_notifications: 643a3eda1ce1c0599413ca31672536d423dee214
-  flutter_secure_storage_darwin: acdb3f316ed05a3e68f856e0353b133eec373a23
+  flutter_secure_storage_darwin: 46e401699982ee74142909676535e0f6a7321e58
   flutter_tts: 35ac3c7d42412733e795ea96ad2d7e05d0a75113
   FMDB: 728731dd336af3936ce00f91d9d8495f5718a0e6
   geocoding_darwin: 968545604e6896deeef55517d53a81b3b9801971

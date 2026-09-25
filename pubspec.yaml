@@ -2,7 +2,7 @@ name: socialmesh
 description: "A mesh radio companion app for Meshtastic. Connect over BLE, TCP or USB, message off-grid, map your nodes, and explore the mesh - no internet required."
 publish_to: "none"
 
-version: 1.68.0+213
+version: 1.69.0+214
 
 environment:
   sdk: ^3.12.0
@@ -33,7 +33,7 @@ dependencies:
   typed_data: ^1.4.0
 
   # Storage
-  flutter_secure_storage: ^10.3.1
+  flutter_secure_storage: ^11.2.0
   shared_preferences: ^2.5.5
   sqflite: ^2.3.3
   sqflite_common_ffi: ^2.4.3
@@ -104,7 +104,7 @@ dependencies:
   firebase_crashlytics: ^5.4.0
   firebase_core: ^4.14.0
   firebase_analytics: ^12.5.0
-  firebase_auth: ^6.5.4
+  firebase_auth: ^6.7.0
   firebase_storage: ^13.6.0
   firebase_messaging: ^16.6.0
   characters: ^1.4.0

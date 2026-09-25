@@ -18,10 +18,7 @@ import '../../utils/location_privacy.dart';
 class SecureStorageService {
   final FlutterSecureStorage _storage;
 
-  SecureStorageService()
-    : _storage = const FlutterSecureStorage(
-        aOptions: AndroidOptions(encryptedSharedPreferences: true),
-      );
+  SecureStorageService() : _storage = const FlutterSecureStorage();
 
   /// Store channel key
   Future<void> storeChannelKey(String name, List<int> key) async {

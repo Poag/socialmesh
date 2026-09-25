@@ -100,11 +100,7 @@ class ClaimsCache {
   final FlutterSecureStorage _storage;
 
   ClaimsCache({FlutterSecureStorage? storage})
-    : _storage =
-          storage ??
-          const FlutterSecureStorage(
-            aOptions: AndroidOptions(encryptedSharedPreferences: true),
-          );
+    : _storage = storage ?? const FlutterSecureStorage();
 
   /// Write [claims] to secure storage.
   ///

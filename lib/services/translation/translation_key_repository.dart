@@ -16,11 +16,7 @@ class TranslationKeyRepository {
   final FlutterSecureStorage _storage;
 
   TranslationKeyRepository({FlutterSecureStorage? storage})
-    : _storage =
-          storage ??
-          const FlutterSecureStorage(
-            aOptions: AndroidOptions(encryptedSharedPreferences: true),
-          );
+    : _storage = storage ?? const FlutterSecureStorage();
 
   /// Store a BYO API key securely.
   Future<void> storeKey(String apiKey) async {

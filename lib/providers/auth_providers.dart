@@ -961,9 +961,7 @@ class AuthService {
     // Step 4: Clear FlutterSecureStorage.
     AppLogging.auth('deleteAccount - Clearing SecureStorage...');
     try {
-      const storage = FlutterSecureStorage(
-        aOptions: AndroidOptions(encryptedSharedPreferences: true),
-      );
+      const storage = FlutterSecureStorage();
       await storage.deleteAll();
     } catch (e) {
       AppLogging.auth('deleteAccount - SecureStorage clear error: $e');

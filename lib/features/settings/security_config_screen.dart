@@ -722,7 +722,6 @@ class _SecurityConfigScreenState extends ConsumerState<SecurityConfigScreen>
           accessibility: KeychainAccessibility.first_unlock,
           synchronizable: true, // Enable iCloud Keychain sync
         ),
-        aOptions: AndroidOptions(encryptedSharedPreferences: true),
       );
 
       await storage.write(key: 'PrivateKeyNode$nodeNum', value: _privateKey);
@@ -758,7 +757,6 @@ class _SecurityConfigScreenState extends ConsumerState<SecurityConfigScreen>
           accessibility: KeychainAccessibility.first_unlock,
           synchronizable: true,
         ),
-        aOptions: AndroidOptions(encryptedSharedPreferences: true),
       );
 
       final storedKey = await storage.read(key: 'PrivateKeyNode$nodeNum');
@@ -816,7 +814,6 @@ class _SecurityConfigScreenState extends ConsumerState<SecurityConfigScreen>
           accessibility: KeychainAccessibility.first_unlock,
           synchronizable: true,
         ),
-        aOptions: AndroidOptions(encryptedSharedPreferences: true),
       );
 
       await storage.delete(key: 'PrivateKeyNode$nodeNum');

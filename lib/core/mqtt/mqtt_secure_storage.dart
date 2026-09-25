@@ -44,7 +44,6 @@ class GlobalLayerSecureStorage {
   /// Creates a new instance with platform-appropriate secure storage options.
   GlobalLayerSecureStorage()
     : _secureStorage = const FlutterSecureStorage(
-        aOptions: AndroidOptions(encryptedSharedPreferences: true),
         iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
       );
 
