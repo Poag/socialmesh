@@ -1043,8 +1043,8 @@ void main() {
       final b = MqttClientProxyService.debugBuildClientId('!a6960864');
 
       // Prefix + node id are stable so the broker/logs stay recognisable.
-      expect(a, startsWith('SocialMeshMqttProxy-!a6960864-'));
-      expect(b, startsWith('SocialMeshMqttProxy-!a6960864-'));
+      expect(a, startsWith('SMP-a6960864-'));
+      expect(b, startsWith('SMP-a6960864-'));
       // The suffix differs each build so a reconnect never reuses the id of a
       // lingering session (which the broker would reject as a duplicate).
       expect(a, isNot(b));
@@ -1054,8 +1054,24 @@ void main() {
       final a = MqttClientProxyService.debugBuildClientId(null);
       final b = MqttClientProxyService.debugBuildClientId(null);
 
-      expect(a, startsWith('SocialMeshMqttProxy-'));
+      expect(a, startsWith('SMP-'));
       expect(a, isNot(b));
+    });
+
+    test('stays within the 23-byte MQTT 3.1.1 / Aedes default client-id '
+        'limit', () {
+      // A too-long client id gets the *identifier* rejected by brokers that
+      // enforce the legacy limit (e.g. Aedes's default maxClientsIdLength),
+      // which surfaces as identifierRejected and is easily mistaken for a
+      // credentials or ACL failure instead of an oversized client id.
+      for (final nodeUserId in [null, '!a6960864', '!00000001']) {
+        final id = MqttClientProxyService.debugBuildClientId(nodeUserId);
+        expect(
+          id.length,
+          lessThanOrEqualTo(23),
+          reason: 'client id "$id" exceeds 23 bytes',
+        );
+      }
     });
   });
 }
