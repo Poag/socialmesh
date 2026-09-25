@@ -1222,7 +1222,7 @@ PODS:
     - Firebase/Firestore (= 12.18.0)
     - firebase_core
     - Flutter
-  - cloud_functions (6.4.0):
+  - cloud_functions (6.5.0):
     - Firebase/Functions (= 12.18.0)
     - firebase_core
     - Flutter
@@ -1266,7 +1266,7 @@ PODS:
   - firebase_core (4.14.0):
     - Firebase/CoreOnly (= 12.18.0)
     - Flutter
-  - firebase_crashlytics (5.3.0):
+  - firebase_crashlytics (5.4.0):
     - Firebase/Crashlytics (= 12.18.0)
     - firebase_core
     - Flutter
@@ -1274,7 +1274,7 @@ PODS:
     - Firebase/Messaging (= 12.18.0)
     - firebase_core
     - Flutter
-  - firebase_storage (13.5.0):
+  - firebase_storage (13.6.0):
     - Firebase/Storage (= 12.18.0)
     - firebase_core
     - Flutter
@@ -1982,7 +1982,7 @@ SPEC CHECKSUMS:
   BoringSSL-GRPC: dded2a44897e45f28f08ae87a55ee4bcd19bc508
   camera_avfoundation: 968a9a5323c79a99c166ad9d7866bfd2047b5a9b
   cloud_firestore: 3f0a8af2d865cade8f7db11bc2a419bd66a7237e
-  cloud_functions: 15154e139688f19b75ac4d7b254f16583f3b9a0f
+  cloud_functions: 07b3b2e58372d543d2fa05481d07d4007e462f92
   connectivity_plus: cb623214f4e1f6ef8fe7403d580fdad517d2f7dd
   device_info_plus: 21fcca2080fbcd348be798aa36c3e5ed849eefbe
   emoji_picker_flutter: ece213fc274bdddefb77d502d33080dc54e616cc
@@ -1991,9 +1991,9 @@ SPEC CHECKSUMS:
   firebase_analytics: eabab995ffa6e93bf1888e573eda3a8264c0f30f
   firebase_auth: 4c0f66df5d18671fd5ce6d6e9eb5ebdb653e03e5
   firebase_core: 22b31970001508f6e63945bedcb7b9de68819aa5
-  firebase_crashlytics: f849aa211acedd808e8edc055d57d5aaeb7a2633
+  firebase_crashlytics: 91d8a7da161e84a5cc0366faa1f188ca80ad1a45
   firebase_messaging: e0eae0e66bd04d3c1856ad08ad84ac75e0673a55
-  firebase_storage: d29b933001ab3621acf6b45871a7f981e3e2448b
+  firebase_storage: 6a5f127191e7f63266d5f2250111252f5f904c2d
   FirebaseAnalytics: 651ecdc96c7dd8df0c15d55b6c6b70f78c2987b9
   FirebaseAppCheckInterop: 8c2fe8b563377bd948ee6acc2871fe2dfb3a034a
   FirebaseAuth: 389097b0c63059262aa02800cb0b93c9fab09130
@@ -2080,7 +2080,7 @@ SPEC CHECKSUMS:
   TSBackgroundFetch: 18918b6449a1e3f01eb0f5b44d6d79ce6160a5a5
   url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
   video_player_avfoundation: 3453f792138786248960ca029747fcd9f318ef52
-  workmanager_apple: 904529ae31e97fc5be632cf628507652294a0778
+  workmanager_apple: 1fc2a64e6a63ed3540fbb91b65f0c0d501881248
   ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
 
 PODFILE CHECKSUM: 9bed10193d9b4b81a0441c1aff9cf65c6022f036
