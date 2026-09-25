@@ -6972,7 +6972,7 @@ class ProtocolService {
     int channelIndex,
     Uint8List payload,
   ) {
-    final hash = _fnv1a64(payload);
+    final hash = fnv1a32(payload);
     final nowMs = DateTime.now().millisecondsSinceEpoch;
     final cutoff = nowMs - _kCanvasFrameDedupeTtl.inMilliseconds;
     // Evict stale + scan for a match in one pass.
@@ -6998,17 +6998,26 @@ class ProtocolService {
     return false;
   }
 
-  /// 64-bit FNV-1a hash. Sufficient distribution for the canvas
-  /// short-TTL fingerprint ring (collisions across distinct frames
-  /// from the same sender within a 5 s window are astronomically
-  /// unlikely and would at worst drop one legitimate frame).
-  int _fnv1a64(Uint8List bytes) {
-    const offsetBasis = 0xcbf29ce484222325;
-    const prime = 0x100000001b3;
+  /// 32-bit FNV-1a hash. Sufficient distribution for the canvas
+  /// short-TTL fingerprint ring: the ring holds at most
+  /// [_kCanvasFrameDedupeMax] entries per [_kCanvasFrameDedupeTtl], so a
+  /// collision between distinct frames from the same sender is on the
+  /// order of one in a million and would at worst drop one legitimate
+  /// frame. The value is compared only against itself in memory; it is
+  /// never persisted or sent.
+  ///
+  /// The multiply is split into 16-bit halves so no intermediate exceeds
+  /// 2^53. That keeps the result identical on the VM and on the web,
+  /// where ints are JavaScript doubles and 64-bit literals do not compile.
+  static int fnv1a32(Uint8List bytes) {
+    const offsetBasis = 0x811c9dc5;
+    const prime = 0x01000193;
     var hash = offsetBasis;
     for (final b in bytes) {
       hash ^= b;
-      hash = (hash * prime) & 0xFFFFFFFFFFFFFFFF;
+      hash =
+          ((hash & 0xFFFF) * prime + (((hash >>> 16) * prime) << 16)) &
+          0xFFFFFFFF;
     }
     return hash;
   }
