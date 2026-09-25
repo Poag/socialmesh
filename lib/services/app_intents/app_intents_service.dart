@@ -5,6 +5,7 @@ import 'package:socialmesh/features/nodes/node_display_name_resolver.dart';
 import '../../core/logging.dart';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -40,7 +41,9 @@ class AppIntentsService {
   /// with `NSInternalInconsistencyException`.
   void setup() {
     if (_isSetup) return;
-    if (!Platform.isIOS) return;
+    // kIsWeb first: Platform throws in a browser tab, and setup() runs from
+    // the root widget's first post-frame callback on every platform.
+    if (kIsWeb || !Platform.isIOS) return;
 
     _channel.setMethodCallHandler(_handleMethodCall);
     _isSetup = true;
