@@ -42,12 +42,43 @@ final radioScopeProvider = NotifierProvider<RadioScopeNotifier, String>(
   RadioScopeNotifier.new,
 );
 
+/// Identity scope of the radio the session is bound to, or null before any
+/// radio has been bound this launch.
+///
+/// Distinct from [radioScopeProvider]: when two radios share one dataset,
+/// switching between them changes this without changing the scope.
+class RadioScopeIdentityNotifier extends Notifier<String?> {
+  StreamSubscription<String>? _subscription;
+
+  @override
+  String? build() {
+    _subscription = RadioScope.instance.identityChanges.listen((key) {
+      if (!ref.mounted) return;
+      state = key;
+    });
+    ref.onDispose(() {
+      _subscription?.cancel();
+      _subscription = null;
+    });
+    return RadioScope.instance.connectedKey;
+  }
+}
+
+final radioScopeIdentityProvider =
+    NotifierProvider<RadioScopeIdentityNotifier, String?>(
+      RadioScopeIdentityNotifier.new,
+    );
+
 /// Stored radio profiles, largest first. Consumed by the Radio Data screen;
-/// invalidate it after deleting a profile to refresh the list.
+/// invalidate it after deleting a profile to refresh the list. Refetches on
+/// a scope change and on a connected-radio change, since the list marks
+/// both and a switch between radios sharing one dataset only causes the
+/// latter.
 final radioScopeListProvider = FutureProvider<List<RadioScopeInfo>>((
   ref,
 ) async {
   ref.watch(radioScopeProvider);
+  ref.watch(radioScopeIdentityProvider);
   return RadioScope.instance.list();
 });
 

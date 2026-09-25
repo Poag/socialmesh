@@ -308,6 +308,60 @@ void main() {
       },
     );
 
+    test('switching between radios sharing one dataset marks the new one '
+        'connected without a scope change', () async {
+      await RadioScope.instance.useNodeNum(home);
+      await writeScopedFile('messages.db', 'home');
+      await RadioScope.instance.useNodeNum(mobile, deviceId: 'ble:mobile');
+      await writeScopedFile('messages.db', 'mobile');
+      await RadioScope.instance.useNodeNum(third, deviceId: 'ble:third');
+      await writeScopedFile('messages.db', 'third');
+      await RadioScope.instance.shareScope(
+        key: 'node-6944378a',
+        into: 'node-a6960864',
+      );
+      await RadioScope.instance.shareScope(
+        key: 'node-00001111',
+        into: 'node-a6960864',
+      );
+      await RadioScope.instance.useDevice(deviceId: 'ble:mobile');
+      await RadioScope.instance.useNodeNum(mobile, deviceId: 'ble:mobile');
+      expect(RadioScope.instance.currentKey, 'node-a6960864');
+      expect(RadioScope.instance.connectedKey, 'node-6944378a');
+
+      final scopeChanges = <String>[];
+      final identityChanges = <String>[];
+      final scopeSub = RadioScope.instance.changes.listen(scopeChanges.add);
+      final identitySub = RadioScope.instance.identityChanges.listen(
+        identityChanges.add,
+      );
+      addTearDown(scopeSub.cancel);
+      addTearDown(identitySub.cancel);
+
+      await RadioScope.instance.useDevice(deviceId: 'ble:third');
+      await RadioScope.instance.useNodeNum(third, deviceId: 'ble:third');
+      await Future<void>.delayed(Duration.zero);
+
+      expect(RadioScope.instance.currentKey, 'node-a6960864');
+      expect(RadioScope.instance.connectedKey, 'node-00001111');
+      expect(scopeChanges, isEmpty);
+      expect(identityChanges, ['node-00001111']);
+
+      final scopes = await RadioScope.instance.list();
+      expect(
+        scopes.firstWhere((s) => s.key == 'node-00001111').isConnected,
+        isTrue,
+      );
+      expect(
+        scopes.firstWhere((s) => s.key == 'node-6944378a').isConnected,
+        isFalse,
+      );
+      expect(
+        scopes.firstWhere((s) => s.key == 'node-a6960864').isCurrent,
+        isTrue,
+      );
+    });
+
     test('a kept provisional directory does not keep the radio name', () async {
       await RadioScope.instance.useNodeNum(home);
       await writeScopedFile('messages.db', 'home');

@@ -206,13 +206,30 @@ class RadioScope {
   final Map<Object, RadioScopedCloser> _closers = {};
   final StreamController<String> _changes =
       StreamController<String>.broadcast();
+  final StreamController<String> _identityChanges =
+      StreamController<String>.broadcast();
 
   /// Scope key currently in effect.
   String get currentKey => _current;
 
+  /// Identity scope of the radio the session is bound to, or null before
+  /// any radio has been bound this launch.
+  String? get connectedKey => _lastIdentity;
+
   /// Emits the new key every time the scope changes. The provider layer
   /// listens so it can rebuild the stores.
   Stream<String> get changes => _changes.stream;
+
+  /// Emits the identity scope every time the session binds to a different
+  /// radio. Fires without [changes] when two radios share one dataset: the
+  /// stores stay put, but which radio is connected has changed.
+  Stream<String> get identityChanges => _identityChanges.stream;
+
+  void _bindIdentity(String identity) {
+    if (identity == _lastIdentity) return;
+    _lastIdentity = identity;
+    _identityChanges.add(identity);
+  }
 
   /// Loads the persisted scope and, on first run, moves pre-scoping files
   /// into it. Safe to call more than once.
@@ -298,7 +315,7 @@ class RadioScope {
     }
     // Bookkeeping stays with the radio's own identity; storage follows any
     // sharing arrangement it is part of.
-    _lastIdentity = identity;
+    _bindIdentity(identity);
     final target = _resolveAlias(prefs, identity);
     // Logged on every connect, including when nothing changes: a wrong
     // binding shows up as a connect that quietly resolves to another
@@ -363,7 +380,7 @@ class RadioScope {
         publicKeyHex,
       );
     }
-    _lastIdentity = identity;
+    _bindIdentity(identity);
 
     final target = _resolveAlias(prefs, identity);
     // Logged on every identity report for the same reason as the connect
